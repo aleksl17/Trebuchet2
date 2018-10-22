@@ -1,0 +1,4 @@
+.idea
+cmake-build-*
+*.swp
+*.tmp
