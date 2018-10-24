@@ -7,7 +7,7 @@
 #include "layers/layer.h"
 #include "objects/object.h"
 
-float y = 100;
+float y = 230;
 float x = 0;
 
 bool Game::init()
@@ -20,7 +20,7 @@ bool Game::init()
     }
 
     // Standard SFML setup
-    window.create(sf::VideoMode(640, 480), "Mario?");
+    window.create(sf::VideoMode(1280, 720), "Trebuchet 2: Double Cannonaloo");
 
     // Double the size of the screen
     sf::View view = window.getDefaultView();
@@ -83,7 +83,7 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<Object*>& objects, float
                 }
                 if (event.key.code == sf::Keyboard::D)
                 {
-                    x++;
+                    y++;
                 }
 
             case sf::Event::KeyReleased:
