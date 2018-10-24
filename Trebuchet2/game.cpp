@@ -7,6 +7,9 @@
 #include "layers/layer.h"
 #include "objects/object.h"
 
+float y = 100;
+float x = 0;
+
 bool Game::init()
 {
     // Load map information from JSON into object list
@@ -24,6 +27,7 @@ bool Game::init()
     view.setSize(view.getSize().x / 2, view.getSize().y / 2);
     view.setCenter(view.getCenter().x / 2, view.getCenter().y / 2);
     window.setView(view);
+
 
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
@@ -49,6 +53,11 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<Object*>& objects, float
 {
     sf::Event event;
 
+    sf::Texture playerRollRight;
+    playerRollRight.loadFromFile("data/playerRollRight.png");
+    sf::Sprite player(playerRollRight);
+
+
     // Process events from the OS
     while (window.pollEvent(event))
     {
@@ -57,6 +66,25 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<Object*>& objects, float
             case sf::Event::Closed:
                 window.close();
                 return false;
+
+            case sf::Event::KeyPressed:
+                //player movment
+                if (event.key.code == sf::Keyboard::W)
+                {
+                    y--;
+                }
+                if (event.key.code == sf::Keyboard::S)
+                {
+                    y++;
+                }
+                if (event.key.code == sf::Keyboard::A)
+                {
+                    x--;
+                }
+                if (event.key.code == sf::Keyboard::D)
+                {
+                    x++;
+                }
 
             case sf::Event::KeyReleased:
                 // Reload map on F5
@@ -94,6 +122,8 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<Object*>& objects, float
         object->draw(window);
     }
 
+    player.setPosition(x,y);
+    window.draw(player);
     window.display();
 
     return true;
