@@ -83,7 +83,7 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<Object*>& objects, float
                 }
                 if (event.key.code == sf::Keyboard::D)
                 {
-                    y++;
+                    x++;
                 }
 
             case sf::Event::KeyReleased:
