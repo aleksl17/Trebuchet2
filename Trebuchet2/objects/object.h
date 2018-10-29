@@ -1,40 +1,29 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include <memory>
+
 namespace sf
 {
     class RenderWindow;
     class Texture;
 }
 
-// Small helper struct that contains tile size information
-struct TileSize
-{
-    int x; // Width
-    int y; // Height
-    int s; // Spacing
-};
+class Map;
 
-// Class representing any game object
+// Base class representing any game object, including tile layers and sprites
 class Object
 {
-    // Map needs to access protected/private data
-    friend class Map;
-
 public:
-    explicit Object(TileSize tileSize) : tileSize(tileSize), texture(nullptr) { }
-    virtual ~Object();
+    explicit Object(Map& map) : map(map) {}
+    virtual ~Object() = default;
 
     virtual void process(float deltaTime) {}
     virtual void draw(sf::RenderWindow& window) {}
 
-    // Calculate x and y position of given tile in the texture
-    void getTileCoords(int tile, int& x, int& y);
-
-    const TileSize tileSize;
-
 protected:
-    sf::Texture* texture;
+    // Reference to map class so objects can use the map to set textures for drawing
+    Map& map;
 };
 
 #endif

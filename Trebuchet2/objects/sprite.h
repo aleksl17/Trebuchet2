@@ -11,29 +11,28 @@ class Sprite : public Object
     friend class Map;
 
 public:
-    explicit Sprite(const TileSize& tileSize) : Object(tileSize)
-    {
-        id = x = y = frame = frameCount = frameDuration = 0;
-    }
+    explicit Sprite(Map& map) : Object(map) {}
 
     void process(float time) override;
     void draw(sf::RenderWindow& window) override;
 
 protected:
+    // Object id
+    int id = 0;
+
     // Id of first tile
-    int id;
+    unsigned int gid = 0;
 
     // Location on screen
-    int x, y;
+    int x = 0;
+    int y = 0;
+
+    // Dimensions
+    int width = 0;
+    int height = 0;
 
     // Current animation frame
-    int frame;
-
-    //Frame count (duh)
-    int frameCount;
-
-    // Length of one frame in ms
-    int frameDuration;
+    int frame = 0;
 
     // Times the animation
     sf::Clock clock;

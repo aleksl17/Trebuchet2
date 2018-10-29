@@ -1,23 +1,34 @@
+#include <memory>
 #include <iostream>
 
 #include <SFML/Window.hpp>
 
 #include "game.h"
-#include "layers/map.h"
-#include "layers/layer.h"
+#include "map/map.h"
+#include "layer/layer.h"
 #include "objects/object.h"
+#include "player/player.h"
 
-float y = 230;
-float x = 0;
+//Note to Aleks:
+//You should make a class that checks for and handles collisions and derive every "solid" class from it (Player, Platforms, Walls, Enemies, etc).
+//That will make handling collisions in the future much easier.
+//https://en.sfml-dev.org/forums/index.php?topic=13358.0
+
+float movementSpeed = 1.0;
+
+Player player("data/playerRollRight.png");
 
 bool Game::init()
 {
     // Load map information from JSON into object list
-    if (!Map::load("data/map.json", objects))
+    if (!map.loadFromFile("data/map.json"))
     {
         std::cout << "Failed to load map data." << std::endl;
         return false;
     }
+
+    // Move objects from map object to Game list
+    objects.splice(objects.begin(), map.getObjects());
 
     // Standard SFML setup
     window.create(sf::VideoMode(1280, 720), "Trebuchet 2: Double Cannonaloo");
@@ -28,9 +39,11 @@ bool Game::init()
     view.setCenter(view.getCenter().x / 2, view.getCenter().y / 2);
     window.setView(view);
 
-
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
+
+    // Makes sure player moves continually when key is held down
+    window.setKeyRepeatEnabled(true);
 
     return true;
 }
@@ -49,14 +62,9 @@ void Game::run()
 }
 
 // Process and draws one frame of the game
-bool Game::gameTick(sf::RenderWindow& window, std::list<Object*>& objects, float deltaTime)
+bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>& objects, float deltaTime)
 {
     sf::Event event;
-
-    sf::Texture playerRollRight;
-    playerRollRight.loadFromFile("data/playerRollRight.png");
-    sf::Sprite player(playerRollRight);
-
 
     // Process events from the OS
     while (window.pollEvent(event))
@@ -68,22 +76,17 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<Object*>& objects, float
                 return false;
 
             case sf::Event::KeyPressed:
-                //player movment
-                if (event.key.code == sf::Keyboard::W)
-                {
-                    y--;
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+                    player.movePlayer('u', movementSpeed);
                 }
-                if (event.key.code == sf::Keyboard::S)
-                {
-                    y++;
+                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+                    player.movePlayer('d', movementSpeed);
                 }
-                if (event.key.code == sf::Keyboard::A)
-                {
-                    x--;
+                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+                    player.movePlayer('l', movementSpeed);
                 }
-                if (event.key.code == sf::Keyboard::D)
-                {
-                    x++;
+                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+                    player.movePlayer('r', movementSpeed);
                 }
 
             case sf::Event::KeyReleased:
@@ -92,11 +95,13 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<Object*>& objects, float
                 {
                     objects.clear();
 
-                    if (!Map::load("data/map.json", objects))
+                    if (!map.loadFromFile("data/map.json"))
                     {
                         std::cout << "Failed to reload map data." << std::endl;
                         return false;
                     }
+
+                    objects.splice(objects.begin(), map.getObjects());
                 }
 
                 // Exit program on escape
@@ -116,14 +121,15 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<Object*>& objects, float
     window.clear(sf::Color::Black);
 
     // Process and render each object
-    for (Object* object : objects)
+    for (auto& object: objects)
     {
         object->process(deltaTime);
         object->draw(window);
     }
 
-    player.setPosition(x,y);
-    window.draw(player);
+    //draws player on screen
+    player.drawPlayer(window);
+
     window.display();
 
     return true;

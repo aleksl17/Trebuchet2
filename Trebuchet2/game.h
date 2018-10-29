@@ -1,11 +1,13 @@
-#ifndef TREBUCHET2_GAME_H
-#define TREBUCHET2_GAME_H
+#ifndef GAME_H
+#define GAME_H
 
 #include <list>
 
 
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics.hpp>
+
+#include "map/map.h"
 
 class Object;
 
@@ -15,13 +17,15 @@ public:
     void run();
 
 protected:
-    bool gameTick(sf::RenderWindow& window, std::list<Object*>& objects, float deltaTime);
+    bool gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>& objects, float deltaTime);
 
     // List of game objects. Should of course be put somewhere else in a bigger game
-    std::list<Object*> objects;
+    std::list<std::shared_ptr<Object>> objects;
     sf::Clock clock;
 
     sf::RenderWindow window;
+
+    Map map;
 };
 
 #endif
