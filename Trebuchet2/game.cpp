@@ -79,13 +79,13 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
                     player.movePlayer('u', movementSpeed);
                 }
-                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
                     player.movePlayer('d', movementSpeed);
                 }
-                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
                     player.movePlayer('l', movementSpeed);
                 }
-                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
                     player.movePlayer('r', movementSpeed);
                 }
 
