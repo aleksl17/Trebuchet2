@@ -9,14 +9,14 @@
 #include "objects/object.h"
 #include "player/player.h"
 
+
 //Note to Aleks:
 //You should make a class that checks for and handles collisions and derive every "solid" class from it (Player, Platforms, Walls, Enemies, etc).
 //That will make handling collisions in the future much easier.
 //https://en.sfml-dev.org/forums/index.php?topic=13358.0
 
-float movementSpeed = 1.0;
+player player("data/playerRollRight.png");
 
-Player player("data/playerRollRight.png");
 
 bool Game::init()
 {
@@ -26,6 +26,7 @@ bool Game::init()
         std::cout << "Failed to load map data." << std::endl;
         return false;
     }
+
 
     // Move objects from map object to Game list
     objects.splice(objects.begin(), map.getObjects());
@@ -48,6 +49,7 @@ bool Game::init()
     return true;
 }
 
+
 void Game::run()
 {
     float deltaTime = 0;
@@ -64,7 +66,7 @@ void Game::run()
 // Process and draws one frame of the game
 bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>& objects, float deltaTime)
 {
-    sf::Event event;
+    sf::Event event{};
 
     // Process events from the OS
     while (window.pollEvent(event))
@@ -74,21 +76,7 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>
             case sf::Event::Closed:
                 window.close();
                 return false;
-
-            case sf::Event::KeyPressed:
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-                    player.movePlayer('u', movementSpeed);
-                }
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-                    player.movePlayer('d', movementSpeed);
-                }
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-                    player.movePlayer('l', movementSpeed);
-                }
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-                    player.movePlayer('r', movementSpeed);
-                }
-
+                
             case sf::Event::KeyReleased:
                 // Reload map on F5
                 if (event.key.code == sf::Keyboard::F5)
@@ -128,7 +116,9 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>
     }
 
     //draws player on screen
-    player.drawPlayer(window);
+    player.Update(deltaTime);
+    player.draw(window);
+
 
     window.display();
 

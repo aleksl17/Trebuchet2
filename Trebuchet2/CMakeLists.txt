@@ -14,7 +14,7 @@ set(SOURCE_FILES
         objects/object.h
         objects/sprite.cpp
         objects/sprite.h
-        player/player.h)
+        player/player.h )
 
 add_executable(Trebuchet2 ${SOURCE_FILES})
 

@@ -4,39 +4,42 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-class Player{
+class player{
 public:
-    Player() = default;
-
-    explicit Player(const std::string &imgDirectory){
+    explicit player(const std::string &imgDirectory){
         if(!pTexture.loadFromFile(imgDirectory)){
             std::cerr << "Could not Load Player Texture From File\n";
         }
         pSprite.setTexture(pTexture);
+        pSprite.setPosition(50.0f,200.0f);
+    }
+    ~player() = default;
+
+    void Update(float deltaTime)
+    {
+        sf::Vector2f movement(0.0f, 0.0f);
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+            movement.x -= speed * deltaTime;
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+            movement.x+= speed * deltaTime;
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+            movement.y -= speed * deltaTime;
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            movement.y += speed * deltaTime;
+
+        pSprite.move(movement.x,movement.y);
     }
 
-    void drawPlayer(sf::RenderWindow &window){
+    void draw(sf::RenderWindow &window){
         window.draw(pSprite);
     }
 
-    void movePlayer(char direction, float moveSpeed){
-        if(direction == 'u'){
-            pSprite.move(0, -moveSpeed);
-        }
-        else if(direction == 'd'){
-            pSprite.move(0, moveSpeed);
-        }
-        else if(direction == 'l'){
-            pSprite.move(-moveSpeed, 0);
-        }
-        else if(direction == 'r'){
-            pSprite.move(moveSpeed, 0);
-        }
-    }
 
 private:
     sf::Texture pTexture;
     sf::Sprite pSprite;
+    float speed = 100;
 };
 
 #endif
