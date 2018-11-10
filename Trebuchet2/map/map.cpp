@@ -1,22 +1,24 @@
 #include <memory>
 #include <fstream>
-#include <cstring>
-#include <vector>
 
 #include <jsoncpp/json/json.h>
-#include <SFML/Graphics.hpp>
+
+#include <SFML/Graphics/Sprite.hpp>
 
 #include "map.h"
 #include "objects/object.h"
-#include "objects/sprite.h"
 #include "layer/layer.h"
+#include "objects/sprite.h"
+
+// Public functions
 
 bool Map::loadFromFile(const std::string& filename)
 {
     // Clear existing data
     tilesets.clear();
     animations.clear();
-    objects.clear();
+    layers.clear();
+    sprites.clear();
 
     // Will contain the data we read in
     Json::Value root;
@@ -44,7 +46,7 @@ bool Map::loadFromFile(const std::string& filename)
     for (Json::Value& tileset: root["tilesets"])
         loadTileset(tileset);
 
-        // Read in each layer
+    // Read in each layer
     for (Json::Value& layer: root["layers"])
     {
         if (layer["name"].asString() != "objects")
@@ -56,6 +58,27 @@ bool Map::loadFromFile(const std::string& filename)
     return true;
 }
 
+std::shared_ptr<Layer> Map::getLayer(const std::string& name)
+{
+    for (auto& layer: layers)
+    {
+        if (layer->name == name)
+            return layer;
+    }
+
+    return std::shared_ptr<Layer>();
+}
+
+const std::shared_ptr<std::vector<AnimationFrame>> Map::getAnimation(unsigned int gid)
+{
+    auto animationIt = animations.find(gid);
+
+    if (animationIt != animations.end())
+        return animationIt->second;
+
+    return std::shared_ptr<std::vector<AnimationFrame>>();
+}
+
 void Map::setSpriteTextureFromGid(sf::Sprite &sprite, unsigned int gid, int frame)
 {
     // Extract flip flags
@@ -64,11 +87,16 @@ void Map::setSpriteTextureFromGid(sf::Sprite &sprite, unsigned int gid, int fram
     // Remove flip flags
     gid &= ~(0b111 << 29);
 
-    auto& animation = animations[gid];
+    // Look for an animation for this gid
+    auto animationIt = animations.find(gid);
 
-    // Lookup the right animation gid frame, if any
-    if (frame > 0 && frame < (int)animation.size())
-        gid = animation[frame]->gid;
+    if (animationIt != animations.end())
+    {
+        auto& animation = *animationIt->second;
+
+        if (frame >= 0 && frame < (int)animation.size())
+            gid = animation[frame].gid;
+    }
 
     // Find the correct tileset for this gid
     auto tileset = *std::find_if(tilesets.rbegin(), tilesets.rend(), [gid](auto ts) { return gid >= ts->firstGid; } );
@@ -100,10 +128,7 @@ void Map::setSpriteTextureFromGid(sf::Sprite &sprite, unsigned int gid, int fram
     sprite.setTextureRect(sf::IntRect(x, y, textureRectWidth, textureRectHeight));
 }
 
-const std::vector<std::shared_ptr<AnimationFrame>>& Map::getAnimation(unsigned int gid)
-{
-    return animations[gid];
-}
+// Protected functions
 
 void Map::loadTileset(Json::Value& tileset)
 {
@@ -129,7 +154,11 @@ void Map::loadTileset(Json::Value& tileset)
         for (Json::Value& animation: tile["animation"]) {
             unsigned int gid = ts->firstGid + animation["tileid"].asUInt();
             int duration = animation["duration"].asInt();
-            animations[animationId].push_back(std::make_shared<AnimationFrame>(gid, duration));
+
+            if (animations.find(animationId) == animations.end())
+                animations[animationId]= std::make_shared<std::vector<AnimationFrame>>();
+
+            animations[animationId]->push_back(AnimationFrame(gid, duration));
         }
     }
 }
@@ -150,7 +179,7 @@ void Map::loadTileLayer(Json::Value& layer)
     for (size_t i = 0; i < layer["data"].size(); i++)
         tmp->tilemap[i] = layer["data"][(int) i].asUInt();
 
-    objects.push_back(tmp);
+    layers.push_back(tmp);
 }
 
 void Map::loadObjectLayer(Json::Value& layer)
@@ -162,13 +191,13 @@ void Map::loadObjectLayer(Json::Value& layer)
 
         // Load basic object info
         sprite->id = object["id"].asInt();
-        sprite->gid = object["gid"].asInt();
+        sprite->gid = object["gid"].asUInt();
         sprite->x = object["x"].asInt();
         sprite->y = object["y"].asInt();
         sprite->width = object["width"].asInt();
         sprite->height = object["height"].asInt();
         sprite->y -= sprite->height; // Not sure why Tiled anchor in the bottom left...
 
-        objects.push_back(sprite);
+        sprites.push_back(sprite);
     }
 }

@@ -1,12 +1,18 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <memory>
 #include <string>
 #include <vector>
 #include <list>
 #include <map>
 
-#include "layer/layer.h"
+#include <SFML/Graphics/Texture.hpp>
+
+namespace sf
+{
+    class Sprite;
+}
 
 namespace Json
 {
@@ -14,6 +20,8 @@ namespace Json
 }
 
 class Object;
+class Sprite;
+class Layer;
 
 // Helper struct describing a tileset
 struct Tileset
@@ -50,16 +58,22 @@ public:
     int getTileWidth() const { return tileWidth; }
     int getTileHeight() const { return tileHeight; }
 
-    // Call this function after loadFromFile to get a list of objects that you can use to draw etc.
-    std::list<std::shared_ptr<Object>>& getObjects() { return objects; }
+    // Get layer by name. Use this to find the foreground layer for collision detection etc.
+    std::shared_ptr<Layer> getLayer(const std::string& name);
+
+    // Call this function after loadFromFile to get a list of layers that you can draw etc.
+    std::list<std::shared_ptr<Layer>>& getLayers() { return layers; }
+
+    // Call this function after loadFromFile to get a list of sprites that you can draw etc.
+    std::list<std::shared_ptr<Sprite>>& getSprites() { return sprites; }
+
+    // Gets animation for a specific global tile id
+    const std::shared_ptr<std::vector<AnimationFrame>> getAnimation(unsigned int gid);
 
     // Sets sprite texture and texture coordinates based on global tile id
     void setSpriteTextureFromGid(sf::Sprite& sprite, unsigned int gid, int frame = 0);
 
-    // Gets animation for a specific global tile id
-    const std::vector<std::shared_ptr<AnimationFrame>>& getAnimation(unsigned int gid);
-
-private:
+protected:
     // Used in loadFromFile to load information from JSON
     void loadTileset(Json::Value& tileset);
     void loadTileLayer(Json::Value& layer);
@@ -70,10 +84,13 @@ private:
     int tileWidth;
     int tileHeight;
 
+    // Map information
     std::list<std::shared_ptr<Tileset>> tilesets;
-    std::map<int, std::vector<std::shared_ptr<AnimationFrame>>> animations;
+    std::map<int, std::shared_ptr<std::vector<AnimationFrame>>> animations;
 
-    std::list<std::shared_ptr<Object>> objects;
+    // Map content
+    std::list<std::shared_ptr<Layer>> layers;
+    std::list<std::shared_ptr<Sprite>> sprites;
 };
 
 #endif

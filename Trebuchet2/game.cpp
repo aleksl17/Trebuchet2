@@ -28,8 +28,11 @@ bool Game::init()
     }
 
 
-    // Move objects from map object to Game list
-    objects.splice(objects.begin(), map.getObjects());
+    // Copy layer references from map object to Game list
+    std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
+
+    // Copy sprite references from map object to Game list
+    //std::copy(map.getSprites().begin(), map.getSprites().end(), std::back_inserter(objects));
 
     // Standard SFML setup
     window.create(sf::VideoMode(1280, 720), "Trebuchet 2: Double Cannonaloo");
@@ -89,7 +92,8 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>
                         return false;
                     }
 
-                    objects.splice(objects.begin(), map.getObjects());
+                    std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
+                    //std::copy(map.getSprites().begin(), map.getSprites().end(), std::back_inserter(objects));
                 }
 
                 // Exit program on escape
@@ -113,6 +117,17 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>
     {
         object->process(deltaTime);
         object->draw(window);
+    }
+
+    int tiley = player.gety() / map.getTileHeight();
+    int tilex = player.getx() / map.getTileWidth();
+    auto layer = map.getLayer("foreground");
+
+    if (layer->getTilemap()[tilex + tiley * layer->getWidth()] != 0) {
+        //collision
+        std::cout << "tilex=" << tilex << " tiley=" << tiley << " getwidth=" << layer->getWidth()
+                  << " gettileheight/width=" << map.getWidth() << map.getHeight() << " player x og y ="
+                  << player.gety() << " " << player.getx() << std::endl;
     }
 
     //draws player on screen

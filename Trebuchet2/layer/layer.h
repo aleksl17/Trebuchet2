@@ -17,6 +17,10 @@ public:
 
     void draw(sf::RenderWindow& window) override;
 
+    int getWidth() const { return width; }
+    int getHeight() const { return height; }
+    unsigned int* getTilemap() { return tilemap; }
+
 protected:
     int id = 0;
     std::string name;

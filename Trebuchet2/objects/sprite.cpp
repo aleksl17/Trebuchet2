@@ -7,14 +7,14 @@ void Sprite::process(float deltaTime)
 {
     auto& animation = map.getAnimation(gid);
 
-    if (animation.empty())
+    if (animation->empty())
         return;
 
     // Go to next animation frame if required
-    if (clock.getElapsedTime().asMilliseconds() < animation[frame]->duration)
+    if (clock.getElapsedTime().asMilliseconds() < (*animation)[frame].duration)
         return;
 
-    if (++frame >= (int)animation.size())
+    if (++frame >= (int)animation->size())
         frame = 0;
 
     clock.restart();

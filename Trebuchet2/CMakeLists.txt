@@ -14,9 +14,9 @@ set(SOURCE_FILES
         objects/object.h
         objects/sprite.cpp
         objects/sprite.h
-        player/player.h map/collision.h)
+        player/player.h)
 
-add_executable(Trebuchet2 ${SOURCE_FILES} map/collision.h)
+add_executable(Trebuchet2 ${SOURCE_FILES})
 
 target_link_libraries (Trebuchet2 jsoncpp sfml-graphics sfml-window sfml-system )
 target_include_directories(Trebuchet2 PUBLIC .)
