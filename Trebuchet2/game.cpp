@@ -119,16 +119,38 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>
         object->draw(window);
     }
 
-    int tiley = player.gety() / map.getTileHeight();
-    int tilex = player.getx() / map.getTileWidth();
+
+
+
     auto layer = map.getLayer("foreground");
 
-    if (layer->getTilemap()[tilex + tiley * layer->getWidth()] != 0) {
+    if (layer->getTilemap()[(player.getx() / map.getTileWidth()) +
+                            (player.gety() / map.getTileHeight()) * layer->getWidth()] != 0) {
         //collision
-        std::cout << "tilex=" << tilex << " tiley=" << tiley << " getwidth=" << layer->getWidth()
+        if (player.left) {
+            player.cantleft = true;
+            player.pSprite.setPosition(player.getx() + 1, player.gety());
+        }
+        if (player.right) {
+            player.cantright = true;
+            player.pSprite.setPosition(player.getx() - 1, player.gety());
+        }
+        if (player.up) {
+            player.cantup = true;
+            player.pSprite.setPosition(player.getx(), player.gety() + 1);
+        }
+        if (player.down) {
+            player.cantdown = true;
+            player.pSprite.setPosition(player.getx(), player.gety() - 1);
+        }
+        std::cout << "tilex=" << player.getx() / map.getTileWidth() << " tiley="
+                  << player.gety() / map.getTileWidth() << " getwidth=" << layer->getWidth()
                   << " gettileheight/width=" << map.getWidth() << map.getHeight() << " player x og y ="
                   << player.gety() << " " << player.getx() << std::endl;
     }
+
+
+
 
     //draws player on screen
     player.Update(deltaTime);
