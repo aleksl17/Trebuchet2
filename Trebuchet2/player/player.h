@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "map/map.h"
 
 class player{
 public:
@@ -10,11 +11,10 @@ public:
     bool left = false;
     bool right = false;
     bool up = false;
-    bool down = false;
     bool cantleft = false;
     bool cantright = false;
     bool cantup = false;
-    bool cantdown = false;
+    bool grounded = false;
 
     explicit player(const std::string &imgDirectory){
         if(!pTexture.loadFromFile(imgDirectory)){
@@ -27,34 +27,39 @@ public:
 
     void Update(float deltaTime) {
         sf::Vector2f movement(0.0f, 0.0f);
+        up = false;
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) and !cantleft) {
             movement.x -= speed * deltaTime;
             left = true;
             right = false;
             up = false;
-            down = false;
+            cantleft = false;
+            cantright = false;
+            cantup = false;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) and !cantright) {
             movement.x += speed * deltaTime;
             left = false;
             right = true;
             up = false;
-            down = false;
+            cantleft = false;
+            cantright = false;
+            cantup = false;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) and !cantup) {
             movement.y -= speed * deltaTime;
             left = false;
             right = false;
             up = true;
-            down = false;
+            cantleft = false;
+            cantright = false;
+            cantup = false;
+            grounded = false;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) and !cantdown) {
+        //gravity
+        if (!grounded and !up){
             movement.y += speed * deltaTime;
-            left = false;
-            right = false;
-            up = false;
-            down = true;
         }
 
         pSprite.move(movement.x, movement.y);
@@ -72,11 +77,6 @@ public:
         if (gety() > 335 && gety() < 338) {
             pSprite.setPosition(getx(), 335);
         }
-        cantleft = false;
-        cantright = false;
-        cantup = false;
-        cantdown = false;
-
     }
 
     void draw(sf::RenderWindow &window){
@@ -85,11 +85,14 @@ public:
 
     int getx(){ return static_cast<int>(pSprite.getPosition().x);}
     int gety(){ return static_cast<int>(pSprite.getPosition().y);}
+
+
 private:
     sf::Texture pTexture;
 
     float speed = 100;
-
+protected:
+    Map map;
 };
 
 #endif

@@ -91,7 +91,6 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>
                         std::cout << "Failed to reload map data." << std::endl;
                         return false;
                     }
-
                     std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
                     //std::copy(map.getSprites().begin(), map.getSprites().end(), std::back_inserter(objects));
                 }
@@ -118,39 +117,53 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>
         object->process(deltaTime);
         object->draw(window);
     }
-
-
-
-
-    auto layer = map.getLayer("foreground");
-
-    if (layer->getTilemap()[(player.getx() / map.getTileWidth()) +
-                            (player.gety() / map.getTileHeight()) * layer->getWidth()] != 0) {
-        //collision
-        if (player.left) {
-            player.cantleft = true;
-            player.pSprite.setPosition(player.getx() + 1, player.gety());
-        }
-        if (player.right) {
-            player.cantright = true;
-            player.pSprite.setPosition(player.getx() - 1, player.gety());
-        }
-        if (player.up) {
-            player.cantup = true;
-            player.pSprite.setPosition(player.getx(), player.gety() + 1);
-        }
-        if (player.down) {
-            player.cantdown = true;
-            player.pSprite.setPosition(player.getx(), player.gety() - 1);
-        }
-        std::cout << "tilex=" << player.getx() / map.getTileWidth() << " tiley="
-                  << player.gety() / map.getTileWidth() << " getwidth=" << layer->getWidth()
-                  << " gettileheight/width=" << map.getWidth() << map.getHeight() << " player x og y ="
-                  << player.gety() << " " << player.getx() << std::endl;
+    int x=0;
+    int y=0;
+    if (player.left) {
+        x = -1;
+    }
+    if (player.right) {
+        x = 1;
+    }
+    if (player.up) {
+        y = -1;
+    }
+    if(!player.grounded){
+        y = 3;
     }
 
-
-
+    auto layer = map.getLayer("foreground");
+    for(int i=0;i<26;i+=5) {
+        for(int j=0;j<26;j+=5) {
+            if (layer->getTilemap()[((player.getx() + i + x) / map.getTileWidth()) +
+                                    ((player.gety() + j + y) / map.getTileHeight()) * layer->getWidth()] != 0) {
+                //collision
+                if (player.left) {
+                    player.cantleft = true;
+                    //player.pSprite.setPosition(player.getx() + 1, player.gety());
+                }
+                if (player.right) {
+                    player.cantright = true;
+                    //player.pSprite.setPosition(player.getx() - 1, player.gety());
+                }
+                if (player.up) {
+                    player.cantup = true;
+                    //player.pSprite.setPosition(player.getx(), player.gety() + 1);
+                }/*
+                if (player.down) {
+                    player.cantdown = true;
+                    player.pSprite.setPosition(player.getx(), player.gety() - 1);
+                }*/
+                if (!player.grounded){
+                    player.grounded = true;
+                }
+                /*std::cout << "tilex=" << player.getx() / map.getTileWidth() << " tiley="
+                          << player.gety() / map.getTileWidth() << " getwidth=" << layer->getWidth()
+                          << " gettileheight/width=" << map.getWidth() << map.getHeight() << " player x og y ="
+                          << player.gety() << " " << player.getx() << std::endl;*/
+            }
+        }
+    }
 
     //draws player on screen
     player.Update(deltaTime);
