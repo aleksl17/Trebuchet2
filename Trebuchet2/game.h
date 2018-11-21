@@ -25,6 +25,8 @@ protected:
 
     sf::RenderWindow window;
 
+    sf::View view;
+
     Map map;
 };
 

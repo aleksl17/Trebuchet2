@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "map/map.h"
 
-class player{
+class player {
 public:
     sf::Sprite pSprite;
     bool left = false;
@@ -18,13 +18,14 @@ public:
     bool jump = true;
     int i = 0;
 
-    explicit player(const std::string &imgDirectory){
-        if(!pTexture.loadFromFile(imgDirectory)){
+    explicit player(const std::string &imgDirectory) {
+        if (!pTexture.loadFromFile(imgDirectory)) {
             std::cerr << "Could not Load Player Texture From File\n";
         }
         pSprite.setTexture(pTexture);
-        pSprite.setPosition(50.0f,200.0f);
+        pSprite.setPosition(50.0f, 200.0f);
     }
+
     ~player() = default;
 
     void Update(float deltaTime) {
@@ -62,34 +63,40 @@ public:
             jump = false;
         }
         //gravity
-        if (!grounded and !up){
+        if (!grounded and !up) {
             movement.y += speed * deltaTime;
         }else{jump = true;}
 
         pSprite.move(movement.x, movement.y);
 
-        //collision til edge
-        if (getx() > -3 && getx() < 0){
-            pSprite.setPosition(0,gety());
+        /*
+        //collision til edge MOVED TO GAME.CPP
+        if (getx() > -3 && getx() < 0) {
+            pSprite.setPosition(0, gety());
         }
-        if (getx() > 615 && getx() < 618){
-            pSprite.setPosition(615,gety());
+        if (getx() > 615 && getx() < 618) {
+            pSprite.setPosition(615, gety());
         }
-        if (gety() > -3 && gety() < 0){
-            pSprite.setPosition(getx(),0);
+        if (gety() > -3 && gety() < 0) {
+            pSprite.setPosition(getx(), 0);
         }
         if (gety() > 335 && gety() < 338) {
             pSprite.setPosition(getx(), 335);
         }
+        */
     }
 
-    void draw(sf::RenderWindow &window){
+    void draw(sf::RenderWindow &window) {
         window.draw(pSprite);
     }
 
-    int getx(){ return static_cast<int>(pSprite.getPosition().x);}
-    int gety(){ return static_cast<int>(pSprite.getPosition().y);}
+    int getx() { return static_cast<int>(pSprite.getPosition().x); }
 
+    int gety() { return static_cast<int>(pSprite.getPosition().y); }
+
+    void setPos(int x, int y) {
+        pSprite.setPosition(x, y);
+    }
 
 private:
     sf::Texture pTexture;
