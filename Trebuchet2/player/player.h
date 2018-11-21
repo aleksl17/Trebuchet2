@@ -15,6 +15,8 @@ public:
     bool cantright = false;
     bool cantup = false;
     bool grounded = false;
+    bool jump = true;
+    int i = 0;
 
     explicit player(const std::string &imgDirectory){
         if(!pTexture.loadFromFile(imgDirectory)){
@@ -28,39 +30,41 @@ public:
     void Update(float deltaTime) {
         sf::Vector2f movement(0.0f, 0.0f);
         up = false;
+        left = false;
+        right = false;
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) and !cantleft) {
             movement.x -= speed * deltaTime;
             left = true;
-            right = false;
-            up = false;
             cantleft = false;
             cantright = false;
             cantup = false;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) and !cantright) {
             movement.x += speed * deltaTime;
-            left = false;
             right = true;
-            up = false;
             cantleft = false;
             cantright = false;
             cantup = false;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) and !cantup) {
-            movement.y -= speed * deltaTime;
-            left = false;
-            right = false;
-            up = true;
-            cantleft = false;
-            cantright = false;
-            cantup = false;
-            grounded = false;
+        if (jump and i<40) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) and !cantup) {
+                movement.y -= speed * deltaTime;
+                up = true;
+                cantleft = false;
+                cantright = false;
+                cantup = false;
+                grounded = false;
+                i++;
+            }
+        }else{
+            i=0;
+            jump = false;
         }
         //gravity
         if (!grounded and !up){
             movement.y += speed * deltaTime;
-        }
+        }else{jump = true;}
 
         pSprite.move(movement.x, movement.y);
 

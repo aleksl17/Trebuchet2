@@ -117,6 +117,7 @@ bool Game::gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>
         object->process(deltaTime);
         object->draw(window);
     }
+    //predict movement
     int x=0;
     int y=0;
     if (player.left) {
