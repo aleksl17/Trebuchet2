@@ -15,7 +15,7 @@ int screenModifier = 1;
 
 bool Game::init() {
     // Load map information from JSON into object list
-    if (!map.loadFromFile("data/map.json")) {
+    if (!map.loadFromFile("data/Desert.json")) {
         std::cout << "Failed to load map data." << std::endl;
         return false;
     }
@@ -71,7 +71,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 if (event.key.code == sf::Keyboard::F5) {
                     objects.clear();
 
-                    if (!map.loadFromFile("data/map.json")) {
+                    if (!map.loadFromFile("data/Desert.json")) {
                         std::cout << "Failed to reload map data." << std::endl;
                         return false;
                     }
