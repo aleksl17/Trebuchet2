@@ -148,6 +148,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
     }
+    //gravity check
     if (player.grounded){
         int k = 0;
         for(int i= 0;i<26;i+=5){
