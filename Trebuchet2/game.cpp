@@ -8,6 +8,7 @@
 #include "layer/layer.h"
 #include "objects/object.h"
 #include "player/player.h"
+#include "projectile/projectile.h"
 
 int mapnr = 0;
 int screenModifier = 1;
@@ -41,6 +42,8 @@ bool Game::init() {
 
     // Makes sure player moves continually when key is held down
     window.setKeyRepeatEnabled(true);
+
+
 
     return true;
 }
@@ -220,9 +223,20 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         screenModifier++;
     }
 
+
+
+    projectile p = projectile(20, 200 , 0 , 5, "data/entities/cannonball.png");
+
+    p.Update();
+
+    p.draw(window);
+
+
     //draws player on screen
     player.Update(deltaTime);
     player.draw(window);
+
+
 
     window.display();
 
