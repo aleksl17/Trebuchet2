@@ -105,6 +105,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         object->draw(window);
     }
     //predict movement
+
     int x = 0;
     int y = 0;
 
@@ -117,8 +118,11 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
     if (player.up) {
         y = -1;
     }
-    if (!player.grounded) {
-        y = 3;
+    if(player.grounded){
+        y = 0;
+    }
+    if(!player.grounded){
+        y = 1;
     }
 
     auto layer = map.getLayer("foreground");
@@ -128,28 +132,32 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                                     ((player.gety() + j + y) / map.getTileHeight()) * layer->getWidth()] != 0) {
                 //collision
                 if (player.left) {
-                    player.cantleft = true;
-                    //player.pSprite.setPosition(player.getx() + 1, player.gety());
+                    player.pSprite.move(1,0);
                 }
                 if (player.right) {
-                    player.cantright = true;
-                    //player.pSprite.setPosition(player.getx() - 1, player.gety());
+                    player.pSprite.move(-1,0);
                 }
                 if (player.up) {
-                    player.cantup = true;
-                    //player.pSprite.setPosition(player.getx(), player.gety() + 1);
-                }/*
-                if (player.down) {
-                    player.cantdown = true;
-                    player.pSprite.setPosition(player.getx(), player.gety() - 1);
-                }*/
-                if (!player.grounded) {
-                    player.grounded = true;
+                    player.pSprite.move(0,1);
                 }
-                /*std::cout << "tilex=" << player.getx() / map.getTileWidth() << " tiley="
-                          << player.gety() / map.getTileWidth() << " getwidth=" << layer->getWidth()
-                          << " gettileheight/width=" << map.getWidth() << map.getHeight() << " player x og y ="
-                          << player.gety() << " " << player.getx() << std::endl;*/
+                if (!player.grounded){
+                    player.grounded = true;
+                    player.pSprite.move(0,-1);
+                }
+
+            }
+        }
+    }
+    //gravity check
+    if (player.grounded){
+        int k = 0;
+        for(int i= 0;i<26;i+=5){
+            if (layer->getTilemap()[((player.getx()+i) / map.getTileWidth()) +
+                                ((player.gety()+27) / map.getTileHeight()) * layer->getWidth()] == 0) {
+                k+=1;
+            }
+            if(k==5){
+                player.grounded = false;
             }
         }
     }

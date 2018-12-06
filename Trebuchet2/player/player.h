@@ -11,9 +11,6 @@ public:
     bool left = false;
     bool right = false;
     bool up = false;
-    bool cantleft = false;
-    bool cantright = false;
-    bool cantup = false;
     bool grounded = false;
     bool jump = true;
     int i = 0;
@@ -34,27 +31,18 @@ public:
         left = false;
         right = false;
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) and !cantleft) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
             movement.x -= speed * deltaTime;
             left = true;
-            cantleft = false;
-            cantright = false;
-            cantup = false;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) and !cantright) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             movement.x += speed * deltaTime;
             right = true;
-            cantleft = false;
-            cantright = false;
-            cantup = false;
         }
         if (jump and i<40) {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) and !cantup) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
                 movement.y -= speed * deltaTime;
                 up = true;
-                cantleft = false;
-                cantright = false;
-                cantup = false;
                 grounded = false;
                 i++;
             }
