@@ -45,10 +45,9 @@ public:
                 up = true;
                 grounded = false;
                 i++;
+            }else{
+                jump = false;
             }
-        }else{
-            i=0;
-            jump = false;
         }
         //gravity
         if (!grounded and !up) {
@@ -56,22 +55,6 @@ public:
         }else{jump = true;}
 
         pSprite.move(movement.x, movement.y);
-
-        /*
-        //collision til edge MOVED TO GAME.CPP
-        if (getx() > -3 && getx() < 0) {
-            pSprite.setPosition(0, gety());
-        }
-        if (getx() > 615 && getx() < 618) {
-            pSprite.setPosition(615, gety());
-        }
-        if (gety() > -3 && gety() < 0) {
-            pSprite.setPosition(getx(), 0);
-        }
-        if (gety() > 335 && gety() < 338) {
-            pSprite.setPosition(getx(), 335);
-        }
-        */
     }
 
     void draw(sf::RenderWindow &window) {

@@ -133,16 +133,20 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 //collision
                 if (player.left) {
                     player.pSprite.move(1,0);
+                    player.jump = false;
                 }
                 if (player.right) {
                     player.pSprite.move(-1,0);
+                    player.jump = false;
                 }
                 if (player.up) {
                     player.pSprite.move(0,1);
+                    player.jump = false;
                 }
                 if (!player.grounded){
                     player.grounded = true;
                     player.pSprite.move(0,-1);
+                    player.i = 0;
                 }
 
             }
@@ -151,12 +155,12 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
     //gravity check
     if (player.grounded){
         int k = 0;
-        for(int i= 0;i<26;i+=5){
-            if (layer->getTilemap()[((player.getx()+i) / map.getTileWidth()) +
+        for(int i= 0;i<36;i+=5){
+            if (layer->getTilemap()[((player.getx()+i-5) / map.getTileWidth()) +
                                 ((player.gety()+27) / map.getTileHeight()) * layer->getWidth()] == 0) {
                 k+=1;
             }
-            if(k==5){
+            if(k==7){
                 player.grounded = false;
             }
         }
@@ -172,9 +176,9 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
     if (player.gety() > 335 && player.gety() < 338) {
         player.setPos(player.getx(), 335);
     }
-    if (player.getx() > 637 * screenModifier) {
+    if (player.getx() > 640 * screenModifier) {
         view.getCenter();
-        view.move(320.f * (screenModifier + 1), 0.f);
+        view.move(640, 0);
         window.setView(view);
         screenModifier++;
     }
