@@ -12,15 +12,23 @@ public:
     bool right = false;
     bool up = false;
     bool grounded = false;
+    bool dead = false;
     bool jump = true;
-    int i = 0;
+    int i = 0,j = 0;
+    sf::Texture pleft;
+    sf::Texture pright;
+    sf::Texture pleft1;
+    sf::Texture pright1;
+    sf::Texture onflame;
 
-    explicit player(const std::string &imgDirectory) {
-        if (!pTexture.loadFromFile(imgDirectory)) {
-            std::cerr << "Could not Load Player Texture From File\n";
-        }
-        pSprite.setTexture(pTexture);
-        pSprite.setPosition(50.0f, 200.0f);
+    player() {
+        pright1.loadFromFile("data/entities/playerRollRight1.png");
+        pleft1.loadFromFile("data/entities/playerRollLeft1.png");
+        pright.loadFromFile("data/entities/playerRollRight.png");
+        pleft.loadFromFile("data/entities/playerRollLeft.png");
+        onflame.loadFromFile("data/entities/onflame_1.png");
+        pSprite.setTexture(pright);
+        pSprite.setPosition(30, 200);
     }
 
     ~player() = default;
@@ -30,23 +38,40 @@ public:
         up = false;
         left = false;
         right = false;
+        if(!dead) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                movement.x -= speed * deltaTime;
+                left = true;
+                if (j < 10) {
+                    pSprite.setTexture(pleft);
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            movement.x -= speed * deltaTime;
-            left = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            movement.x += speed * deltaTime;
-            right = true;
-        }
-        if (jump and i<40) {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-                movement.y -= speed * deltaTime;
-                up = true;
-                grounded = false;
-                i++;
-            }else{
-                jump = false;
+                } else {
+                    pSprite.setTexture(pleft1);
+                }
+                j++;
+                if (j > 20) { j = 0; }
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                movement.x += speed * deltaTime;
+                right = true;
+                if (j < 10) {
+                    pSprite.setTexture(pright);
+
+                } else {
+                    pSprite.setTexture(pright1);
+                }
+                j++;
+                if (j > 20) { j = 0; }
+            }
+            if (jump and i < 40) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                    movement.y -= speed * deltaTime;
+                    up = true;
+                    grounded = false;
+                    i++;
+                } else {
+                    jump = false;
+                }
             }
         }
         //gravity

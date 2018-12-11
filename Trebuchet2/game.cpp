@@ -9,9 +9,9 @@
 #include "objects/object.h"
 #include "player/player.h"
 
-player player("data/playerRollRight.png");
-
+int mapnr = 0;
 int screenModifier = 1;
+player player;
 
 bool Game::init() {
     // Load map information from JSON into object list
@@ -28,6 +28,7 @@ bool Game::init() {
 
     // Standard SFML setup
     window.create(sf::VideoMode(1280, 720), "Trebuchet 2: Double Cannonaloo");
+
 
     // Double the size of the screen
     view = window.getDefaultView();
@@ -83,6 +84,31 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 if (event.key.code == sf::Keyboard::Escape) {
                     window.close();
                     return false;
+                }
+                //change map
+                if (event.key.code == sf::Keyboard::M) {
+                    if (mapnr == 0) {
+                        map.loadFromFile("data/Forest.json");
+                        std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
+                        mapnr++;
+                    }else if(mapnr == 1){
+                        map.loadFromFile("data/Snow.json");
+                        std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
+                        mapnr++;
+                    }else if(mapnr == 2){
+                        map.loadFromFile("data/Desert.json");
+                        std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
+                        mapnr = 0;
+                    }
+                }
+                //respawn
+                if (event.key.code == sf::Keyboard::R) {
+                    player.pSprite.setPosition(30,200);
+                    player.dead = false;
+                    player.pSprite.setTexture(player.pright);
+                    view.move(-640*(screenModifier-1), 0);
+                    screenModifier = 1;
+                    window.setView(view);
                 }
 
                 //Displays current position of player
@@ -152,12 +178,23 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
     }
+    //lava check
+    for (int i = 0; i < 21; i += 5) {
+        for (int j = 0; j < 21; j += 5) {
+            if (layer->getTilemap()[((player.getx() + i) / map.getTileWidth()) +
+                                    ((player.gety() + j +7) / map.getTileHeight()) * layer->getWidth()] == 52) {
+                //dying
+                player.pSprite.setTexture(player.onflame);
+                player.dead = true;
+            }
+        }
+    }
     //gravity check
     if (player.grounded){
         int k = 0;
         for(int i= 0;i<36;i+=5){
             if (layer->getTilemap()[((player.getx()+i-5) / map.getTileWidth()) +
-                                ((player.gety()+27) / map.getTileHeight()) * layer->getWidth()] == 0) {
+                                    ((player.gety()+27) / map.getTileHeight()) * layer->getWidth()] == 0) {
                 k+=1;
             }
             if(k==7){
@@ -191,3 +228,4 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
     return true;
 }
+
