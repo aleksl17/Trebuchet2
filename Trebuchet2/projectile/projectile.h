@@ -67,11 +67,21 @@ public:
     void Update() {
        // int location_x = getlocation_X() + getSpeed_x();
         //int location_y = getlocation_Y() + getSpeed_y();
+        sf::Vector2f movement(0.0f, 0.0f);
+        location_x += speed_x;
+        location_y += speed_y;
 
-        pSprite.move(speed_x, speed_y);
-
+        //pSprite.move(movement.x, movement.y);
     }
 
+
+    int getx() { return static_cast<int>(pSprite.getPosition().x); }
+
+    int gety() { return static_cast<int>(pSprite.getPosition().y); }
+
+    void setPos(int x, int y) {
+        pSprite.setPosition(x, y);
+    }
 
 
 private:
