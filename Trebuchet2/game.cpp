@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include <SFML/Window.hpp>
+#include <commctrl.h>
 
 #include "game.h"
 #include "map/map.h"
@@ -63,6 +64,7 @@ void Game::run() {
 bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>> &objects, float deltaTime) {
     sf::Event event{};
 
+    projectile* p;
     // Process events from the OS
     while (window.pollEvent(event)) {
         switch (event.type) {
@@ -117,6 +119,11 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 //Displays current position of player
                 if (event.key.code == sf::Keyboard::J) {
                     std::cout << "Player position: X = " << player.getx() << " , Y = " << player.gety() << std::endl;
+                }
+
+                if (event.key.code == sf::Keyboard::Space) {
+                    projectile bullet(20, 200 , 0 , 1, "data/entities/cannonball.png");
+                    p = &bullet;
                 }
                 break;
 
@@ -225,11 +232,11 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
 
 
-    projectile p = projectile(20, 200 , 0 , 5, "data/entities/cannonball.png");
 
-    p.Update();
+    p->Update();
+    p->setPos(p->getlocation_X(), p->getlocation_Y());
 
-    p.draw(window);
+    p->draw(window);
 
 
     //draws player on screen
