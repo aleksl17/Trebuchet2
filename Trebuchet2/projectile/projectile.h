@@ -67,7 +67,7 @@ public:
     void Update() {
        // int location_x = getlocation_X() + getSpeed_x();
         //int location_y = getlocation_Y() + getSpeed_y();
-        sf::Vector2f movement(0.0f, 0.0f);
+        //sf::Vector2f movement(0.0f, 0.0f);
         location_x += speed_x;
         location_y += speed_y;
 

@@ -28,16 +28,6 @@ projectile::projectile(int x, int y, int s_y, int s_x, const std::string &imgDir
 
 
 
-
-
-
-
-
-
-
-
-
-
 // GETTER AND SETTERS
 
 
