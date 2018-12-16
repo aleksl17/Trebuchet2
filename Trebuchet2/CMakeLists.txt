@@ -14,6 +14,7 @@ set(SOURCE_FILES
         objects/object.h
         objects/sprite.cpp
         objects/sprite.h
+        objects/catapult.h
         player/player.h
         projectile/projectile.cpp
         projectile/projectile.h

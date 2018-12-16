@@ -9,6 +9,7 @@
 #include "layer/layer.h"
 #include "objects/object.h"
 #include "player/player.h"
+#include "objects/catapult.h"
 #include "projectile/projectile.h"
 #include "menu/menu.h"
 
@@ -19,6 +20,8 @@ int mapnr = 0;
 int screenModifier = 1;
 
 player player;
+catapult cat(210,208);
+
 
 menu menu(screenWidth, screenHeight);
 
@@ -68,6 +71,7 @@ bool Game::init() {
 
     // Makes sure player moves continually when key is held down
     window.setKeyRepeatEnabled(true);
+
 
     return true;
 }
@@ -245,11 +249,11 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
 
-        //lava check
+        //player lava check
         for (int i = 0; i < 21; i += 5) {
             for (int j = 0; j < 21; j += 5) {
                 if (layer->getTilemap()[((player.getx() + i) / map.getTileWidth()) +
-                                        ((player.gety() + j + 7) / map.getTileHeight()) * layer->getWidth()] == 52) {
+                                        ((player.gety() + j +7) / map.getTileHeight()) * layer->getWidth()] == 52) {
                     //dying
                     player.pSprite.setTexture(player.onflame);
                     player.dead = true;
@@ -257,15 +261,15 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
 
-        //gravity check
-        if (player.grounded) {
+        //player gravity check
+        if (player.grounded){
             int k = 0;
-            for (int i = 0; i < 36; i += 5) {
-                if (layer->getTilemap()[((player.getx() + i - 5) / map.getTileWidth()) +
-                                        ((player.gety() + 27) / map.getTileHeight()) * layer->getWidth()] == 0) {
-                    k += 1;
+            for(int i= 0;i<36;i+=5){
+                if (layer->getTilemap()[((player.getx()+i-5) / map.getTileWidth()) +
+                                        ((player.gety()+27) / map.getTileHeight()) * layer->getWidth()] == 0) {
+                    k+=1;
                 }
-                if (k == 7) {
+                if(k==7){
                     player.grounded = false;
                 }
             }
@@ -299,6 +303,16 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 it->Update();
                 it->setPos(it->getlocation_X(), it->getlocation_Y());
                 it->draw(window);
+
+            }
+        }
+
+
+
+        //catapult and player collision
+        for (int i = 0; i < 26; i += 3) {
+            if(player.getx() + i > cat.getx() && player.getx() + i < cat.getx() + 26 && player.gety()+ i > cat.gety() && player.gety() +i < cat.gety()+16){
+                std::cout << "catapult collision\n";
             }
         }
 
@@ -306,12 +320,15 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             menu.draw(window);
         }
         else {
-            //draws player on screen
+            //draws player and enemies on screen
             player.Update(deltaTime);
             player.draw(window);
+            cat.draw(window);
+            cat.Update(deltaTime);
         }
 
         window.display();
+
     }
     else {
         window.draw(text);
@@ -320,6 +337,15 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             isDrawn = true;
         }
     }
+
+
+    //draws player on screen
+    //player.Update(deltaTime);
+    //player.draw(window);
+
+
+    //window.display();
+
     return true;
 }
 
