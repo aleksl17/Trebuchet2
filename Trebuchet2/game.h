@@ -2,8 +2,8 @@
 #define GAME_H
 
 #include <list>
-#include <queue>
 #include "projectile/projectile.h"
+#include <iterator>
 
 
 #include <SFML/System/Clock.hpp>
@@ -11,14 +11,18 @@
 
 #include "map/map.h"
 
+#include <vector>
+
 class Object;
 
 class Game {
 public:
     bool init();
     void run();
-    projectile* p = nullptr;
-    std::queue<projectile*> bullets;
+    //std::queue<projectile> bullets;
+    std::vector<projectile> bullets;
+
+
 
 protected:
     bool gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>& objects, float deltaTime);

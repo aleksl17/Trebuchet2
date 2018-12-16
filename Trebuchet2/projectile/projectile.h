@@ -8,11 +8,13 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "map/map.h"
+#include <queue>
 
 
 class projectile {
 
 public:
+    projectile* p = nullptr;
     bool use_once = false;
     sf::Sprite pSprite;
     std::string canonball = "data/entities/cannonball.png";
