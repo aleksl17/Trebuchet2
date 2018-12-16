@@ -4,7 +4,8 @@
 #include <list>
 #include "projectile/projectile.h"
 #include <iterator>
-
+#include <memory>
+#include <stack>
 
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics.hpp>
@@ -27,9 +28,15 @@ public:
 protected:
     bool gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>& objects, float deltaTime);
 
-    // List of game objects. Should of course be put somewhere else in a bigger game
+    // List of game objects
     std::list<std::shared_ptr<Object>> objects;
     sf::Clock clock;
+
+    sf::Font font;
+
+    sf::FloatRect textRect;
+
+    sf::Text text;
 
     sf::RenderWindow window;
 
