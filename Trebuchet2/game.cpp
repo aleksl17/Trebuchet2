@@ -122,7 +122,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 }
 
                 if (event.key.code == sf::Keyboard::Space) {
-                    projectile bullet(20, 200 , 0 , 1, "data/entities/cannonball.png");
+                    projectile bullet(player.getx(), player.gety() , 0 , 1, "data/entities/cannonball.png");
                     //p = &bullet;
                     bullets.push_back(bullet);
                 }
@@ -231,6 +231,12 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         screenModifier++;
     }
 
+
+
+    //draws player on screen
+    player.Update(deltaTime);
+    player.draw(window);
+
     // copy for auto        std::vector<projectile>::iterator
 
     for (auto it = bullets.begin(); it != bullets.end() ; it++) {
@@ -238,10 +244,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         it->setPos(it->getlocation_X(),it->getlocation_Y());
         it->draw(window);
     }
-
-    //draws player on screen
-    player.Update(deltaTime);
-    player.draw(window);
 
 
 
