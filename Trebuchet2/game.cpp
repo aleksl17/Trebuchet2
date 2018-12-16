@@ -69,8 +69,6 @@ bool Game::init() {
     // Makes sure player moves continually when key is held down
     window.setKeyRepeatEnabled(true);
 
-
-
     return true;
 }
 
@@ -124,12 +122,10 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                             break;
                     }
                 }
-
                 //Pause game
                 if (event.key.code == sf::Keyboard::P) {
                     isRunning = !isRunning;
                 }
-
                 // Reload map on F5
                 if (event.key.code == sf::Keyboard::F5) {
                     objects.clear();
@@ -141,7 +137,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                     std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
                     //std::copy(map.getSprites().begin(), map.getSprites().end(), std::back_inserter(objects));
                 }
-
                 // Exit program on escape
                 if (event.key.code == sf::Keyboard::Escape) {
                     window.close();
@@ -172,13 +167,11 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                     screenModifier = 1;
                     window.setView(view);
                 }
-
                 //Displays current position of player
                 if (event.key.code == sf::Keyboard::J) {
                     std::cout << "Player position: X = " << player.getx() << " , Y = " << player.gety()
                               << std::endl;
                 }
-
                 if (event.key.code == sf::Keyboard::Space) {
                     projectile bullet(player.getx(), player.gety() , 0 , 1, "data/entities/cannonball.png");
                     //p = &bullet;
@@ -190,6 +183,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 // Ignore the other events
                 break;
         }
+
     }
 
     if (isRunning) {
@@ -295,19 +289,16 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             window.setView(view);
             screenModifier++;
         }
-
-
+        
         if (inMenu) {
             menu.draw(window);
         }
         else {
-
             for (auto it = bullets.begin(); it != bullets.end() ; it++) {
                 it->Update();
                 it->setPos(it->getlocation_X(),it->getlocation_Y());
                 it->draw(window);
             }
-
 
             //draws player on screen
             player.Update(deltaTime);
@@ -318,7 +309,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
     }
     else {
         window.draw(text);
-        if (!isDrawn) {
+        if(!isDrawn) {
             window.display();
             isDrawn = true;
         }
