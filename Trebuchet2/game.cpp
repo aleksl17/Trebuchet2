@@ -10,16 +10,21 @@
 #include "objects/object.h"
 #include "player/player.h"
 #include "projectile/projectile.h"
+#include "menu/menu.h"
 
 const int screenWidth = 1280;
 const int screenHeight = 720;
 
 int mapnr = 0;
 int screenModifier = 1;
+
 player player;
+
+menu menu(screenWidth, screenHeight);
 
 bool isRunning = true;
 bool isDrawn = false;
+bool inMenu = true;
 
 bool Game::init() {
     // Load map information from JSON into object list
@@ -40,8 +45,8 @@ bool Game::init() {
     text.setFillColor(sf::Color::Red);
     //Text Position
     textRect = text.getLocalBounds();
-    text.setOrigin(textRect.left + textRect.width/2.0f, textRect.top  + textRect.height/2.0f);
-    text.setPosition(sf::Vector2f(screenWidth/4.0f,screenHeight/4.0f));
+    text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    text.setPosition(sf::Vector2f(screenWidth / 4.0f, screenHeight / 4.0f));
 
     // Copy layer references from map object to Game list
     std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
@@ -93,6 +98,33 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 return false;
 
             case sf::Event::KeyReleased:
+                //Menu keys
+                if (event.key.code == sf::Keyboard::W) {
+                    menu.moveUp();
+                    break;
+                }
+                if (event.key.code == sf::Keyboard::S) {
+                    menu.moveDown();
+                    break;
+                }
+                if (event.key.code == sf::Keyboard::Return) {
+                    switch (menu.getPressedItem()) {
+                        case 0:
+                            std::cout << "Play button has been pressed" << std::endl;
+                            inMenu = false;
+                            break;
+                        case 1:
+                            std::cout << "Option button has been pressed" << std::endl;
+                            break;
+                        case 2:
+                            window.close();
+                            break;
+                        default:
+                            // Ignore the other events
+                            break;
+                    }
+                }
+
                 //Pause game
                 if (event.key.code == sf::Keyboard::P) {
                     isRunning = !isRunning;
@@ -158,21 +190,22 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 // Ignore the other events
                 break;
         }
-
     }
 
     if (isRunning) {
         isDrawn = false;
 
-        window.clear(sf::Color::Black);
+        window.clear();
 
         // Process and render each object
-        for (auto &object: objects) {
-            object->process(deltaTime);
-            object->draw(window);
+        if(!inMenu) {
+            for (auto &object: objects) {
+                object->process(deltaTime);
+                object->draw(window);
+            }
         }
-        //predict movement
 
+        //predict movement
         int x = 0;
         int y = 0;
 
@@ -263,6 +296,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             screenModifier++;
         }
 
+<<<<<<< HEAD
 
 
     //draws player on screen
@@ -281,12 +315,22 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
     }
 
 
+=======
+        if (inMenu) {
+            menu.draw(window);
+        }
+        else {
+            //draws player on screen
+            player.Update(deltaTime);
+            player.draw(window);
+        }
+>>>>>>> Added start menu
 
         window.display();
     }
-    else{
+    else {
         window.draw(text);
-        if(!isDrawn) {
+        if (!isDrawn) {
             window.display();
             isDrawn = true;
         }
