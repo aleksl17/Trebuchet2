@@ -183,7 +183,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 // Ignore the other events
                 break;
         }
-
     }
 
     if (isRunning) {
@@ -294,12 +293,17 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             menu.draw(window);
         }
         else {
-            for (auto it = bullets.begin(); it != bullets.end() ; it++) {
+            for (auto it = bullets.begin(); it != bullets.end(); it++) {
                 it->Update();
-                it->setPos(it->getlocation_X(),it->getlocation_Y());
+                it->setPos(it->getlocation_X(), it->getlocation_Y());
                 it->draw(window);
             }
+        }
 
+        if (inMenu) {
+            menu.draw(window);
+        }
+        else {
             //draws player on screen
             player.Update(deltaTime);
             player.draw(window);
@@ -309,7 +313,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
     }
     else {
         window.draw(text);
-        if(!isDrawn) {
+        if (!isDrawn) {
             window.display();
             isDrawn = true;
         }
