@@ -296,35 +296,23 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             screenModifier++;
         }
 
-<<<<<<< HEAD
 
-
-    //draws player on screen
-    player.Update(deltaTime);
-    player.draw(window);
-
-    //window.draw(text);
-
-
-        // copy for auto        std::vector<projectile>::iterator
-
-    for (auto it = bullets.begin(); it != bullets.end() ; it++) {
-        it->Update();
-        it->setPos(it->getlocation_X(),it->getlocation_Y());
-        it->draw(window);
-    }
-
-
-=======
         if (inMenu) {
             menu.draw(window);
         }
         else {
+
+            for (auto it = bullets.begin(); it != bullets.end() ; it++) {
+                it->Update();
+                it->setPos(it->getlocation_X(),it->getlocation_Y());
+                it->draw(window);
+            }
+
+
             //draws player on screen
             player.Update(deltaTime);
             player.draw(window);
         }
->>>>>>> Added start menu
 
         window.display();
     }
