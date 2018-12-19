@@ -66,6 +66,7 @@ bool Game::init() {
     view.setCenter(view.getCenter().x / 2, view.getCenter().y / 2);
     window.setView(view);
 
+    //Enable VSYNC
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
 
@@ -90,7 +91,6 @@ void Game::run() {
 // Process and draws one frame of the game
 bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>> &objects, float deltaTime) {
     sf::Event event{};
-
 
     // Process events from the OS
     while (window.pollEvent(event)) {
@@ -152,11 +152,13 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                         map.loadFromFile("data/Forest.json");
                         std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
                         mapnr++;
-                    } else if (mapnr == 1) {
+                    }
+                    else if (mapnr == 1) {
                         map.loadFromFile("data/Snow.json");
                         std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
                         mapnr++;
-                    } else if (mapnr == 2) {
+                    }
+                    else if (mapnr == 2) {
                         map.loadFromFile("data/Desert.json");
                         std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
                         mapnr = 0;
@@ -261,8 +263,9 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
 
-        //player gravity check
-        if (player.grounded){
+
+        //Gravity check
+        if (player.grounded) {
             int k = 0;
             for(int i= 0;i<36;i+=5){
                 if (layer->getTilemap()[((player.getx()+i-5) / map.getTileWidth()) +
@@ -275,6 +278,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
 
+        //Edge collision
         if (player.getx() > -3 && player.getx() < 0) {
             player.setPos(0, player.gety());
         }
@@ -285,7 +289,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             player.setPos(player.getx(), 335);
         }
 
-        //Camera moevement logic
+        //Camera movement logic
         if (player.getx() < 322) {
             view.setCenter(320, 180);
             window.setView(view);
@@ -294,7 +298,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             view.setCenter(player.getx(), 180);
             window.setView(view);
         }
-        
+
         if (inMenu) {
             menu.draw(window);
         }
@@ -316,11 +320,14 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
 
+
+        //Draw main menu
         if (inMenu) {
             menu.draw(window);
         }
         else {
             //draws player and enemies on screen
+
             player.Update(deltaTime);
             player.draw(window);
 
