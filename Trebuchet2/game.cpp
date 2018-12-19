@@ -323,8 +323,11 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             //draws player and enemies on screen
             player.Update(deltaTime);
             player.draw(window);
-            cat.draw(window);
-            cat.Update(deltaTime);
+
+            if(mapnr == 0) {
+                cat.draw(window);
+                cat.Update(deltaTime);
+            }
         }
 
         window.display();
@@ -337,14 +340,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             isDrawn = true;
         }
     }
-
-
-    //draws player on screen
-    //player.Update(deltaTime);
-    //player.draw(window);
-
-
-    //window.display();
 
     return true;
 }
