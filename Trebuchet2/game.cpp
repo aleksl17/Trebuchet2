@@ -41,6 +41,13 @@ bool Game::init() {
         return false;
     }
 
+    if (!texture.loadFromFile("data/menuBackground.png")) {
+        std::cout << "Failed to load texture: menu background." << std::endl;
+        return false;
+    }
+
+    background.setTexture(texture);
+
     //Text properties
     text.setFont(font);
     text.setString("Paused");
@@ -59,6 +66,11 @@ bool Game::init() {
 
     // Standard SFML setup
     window.create(sf::VideoMode(screenWidth, screenHeight), "Trebuchet 2: Double Cannonaloo");
+
+    //Init uiView
+    uiView = window.getDefaultView();
+    uiView.setSize(uiView.getSize().x / 2, uiView.getSize().y / 2);
+    uiView.setCenter(uiView.getCenter().x / 2, uiView.getCenter().y / 2);
 
     // Double the size of the screen
     view = window.getDefaultView();
@@ -196,6 +208,8 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
         window.clear();
 
+        window.setView(view);
+
         // Process and render each object
         if(!inMenu) {
             for (auto &object: objects) {
@@ -323,6 +337,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
         //Draw main menu
         if (inMenu) {
+            window.draw(background);
             menu.draw(window);
         }
         else {
@@ -341,6 +356,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
     }
     else {
+        window.setView(uiView);
         window.draw(text);
         if (!isDrawn) {
             window.display();

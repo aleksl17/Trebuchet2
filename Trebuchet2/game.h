@@ -34,9 +34,15 @@ protected:
 
     sf::Text text;
 
+    sf::Texture texture;
+
+    sf::Sprite background;
+
     sf::RenderWindow window;
 
     sf::View view;
+
+    sf::View uiView;
 
     Map map;
 };
