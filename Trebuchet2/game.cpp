@@ -241,7 +241,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                         player.pSprite.move(0, -1);
                         player.i = 0;
                     }
-
                 }
             }
         }
@@ -272,7 +271,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
 
-        //Edge collision and camera movement logic
         if (player.getx() > -3 && player.getx() < 0) {
             player.setPos(0, player.gety());
         }
@@ -282,11 +280,15 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         if (player.gety() > 335 && player.gety() < 338) {
             player.setPos(player.getx(), 335);
         }
-        if (player.getx() > 640 * screenModifier) {
-            view.getCenter();
-            view.move(640, 0);
+
+        //Camera moevement logic
+        if (player.getx() < 322) {
+            view.setCenter(320, 180);
             window.setView(view);
-            screenModifier++;
+        }
+        else {
+            view.setCenter(player.getx(), 180);
+            window.setView(view);
         }
         
         if (inMenu) {
