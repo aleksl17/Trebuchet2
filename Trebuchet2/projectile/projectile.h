@@ -9,7 +9,6 @@
 class projectile {
 
 public:
-    projectile* p = nullptr;
     bool use_once = false;
     sf::Sprite pSprite;
     std::string canonball = "data/entities/cannonball.png";
@@ -29,7 +28,7 @@ public:
     int width = 4;
     int height = 4;
 
-    projectile( float x, float y, float s_y, float s_x, const std::string &imgDirectory, float start_Y, float m_h);
+    projectile(float x, float y, float s_y, float s_x, const std::string &imgDirectory, float start_Y, float m_h);
 
     ~projectile() = default;
 

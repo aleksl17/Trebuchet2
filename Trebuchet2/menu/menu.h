@@ -5,15 +5,18 @@
 
 #define MAX_NUMBER_OF_ITEMS 3
 
-class menu
-{
+class menu {
 public:
     menu(float width, float height);
-    ~menu();
+
+    ~menu() = default;
 
     void draw(sf::RenderWindow &window);
+
     void moveUp();
+
     void moveDown();
+
     int getPressedItem() { return selectedItemIndex; }
 
 private:

@@ -1,6 +1,7 @@
 #include "projectile.h"
 
-projectile::projectile(float x, float y, float s_y, float s_x, const std::string &imgDirectory, float start_Y, float m_h){
+projectile::projectile(float x, float y, float s_y, float s_x, const std::string &imgDirectory, float start_Y,
+                       float m_h) {
 
     if (use_once)
         return;
@@ -69,10 +70,10 @@ void projectile::setSpeed_y(int speed_y) {
     projectile::speed_y = speed_y;
 }
 
-int projectile::get_int_X(float x){
+int projectile::get_int_X(float x) {
     return static_cast<int>(x);
 }
 
-int projectile::get_int_Y(float y){
+int projectile::get_int_Y(float y) {
     return static_cast<int>(y);
 }

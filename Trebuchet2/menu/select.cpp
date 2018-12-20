@@ -2,10 +2,8 @@
 
 #include <iostream>
 
-select::select(float width, float height)
-{
-    if (!font.loadFromFile("data/ShadowsIntoLight.ttf"))
-    {
+select::select(float width, float height) {
+    if (!font.loadFromFile("data/ShadowsIntoLight.ttf")) {
         std::cout << "Failed to load font." << std::endl;
     }
 
@@ -37,33 +35,23 @@ select::select(float width, float height)
     selectedItemIndex = 0;
 }
 
-select::~select()
-{
-}
-
-void select::draw(sf::RenderWindow &window)
-{
-    for (int i = 0; i < MAP_CHOICES; i++)
-    {
+void select::draw(sf::RenderWindow &window) {
+    for (int i = 0; i < MAP_CHOICES; i++) {
         window.draw(menuText[i]);
         window.draw(text);
     }
 }
 
-void select::moveUp()
-{
-    if (selectedItemIndex - 1 >= 0)
-    {
+void select::moveUp() {
+    if (selectedItemIndex - 1 >= 0) {
         menuText[selectedItemIndex].setFillColor(sf::Color::White);
         selectedItemIndex--;
         menuText[selectedItemIndex].setFillColor(sf::Color::Red);
     }
 }
 
-void select::moveDown()
-{
-    if (selectedItemIndex + 1 < MAP_CHOICES)
-    {
+void select::moveDown() {
+    if (selectedItemIndex + 1 < MAP_CHOICES) {
         menuText[selectedItemIndex].setFillColor(sf::Color::White);
         selectedItemIndex++;
         menuText[selectedItemIndex].setFillColor(sf::Color::Red);

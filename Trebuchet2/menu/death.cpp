@@ -2,17 +2,15 @@
 
 #include <iostream>
 
-death::death(float width, float height)
-{
-    if (!font.loadFromFile("data/ShadowsIntoLight.ttf"))
-    {
+death::death(float width, float height) {
+    if (!font.loadFromFile("data/ShadowsIntoLight.ttf")) {
         std::cout << "Failed to load font." << std::endl;
     }
 
     text.setFont(font);
     text.setFillColor(sf::Color::White);
     text.setString("Catapult won");
-    text.setPosition(width/4,20);
+    text.setPosition(width / 4, 20);
 
     menuText[0].setFont(font);
     menuText[0].setFillColor(sf::Color::Red);
@@ -27,33 +25,23 @@ death::death(float width, float height)
     selectedItemIndex = 0;
 }
 
-death::~death()
-{
-}
-
-void death::draw(sf::RenderWindow &window)
-{
-    for (int i = 0; i < MAX_NUMBER_OF_ITEMS0; i++)
-    {
+void death::draw(sf::RenderWindow &window) {
+    for (int i = 0; i < MAX_NUMBER_OF_ITEMS0; i++) {
         window.draw(menuText[i]);
         window.draw(text);
     }
 }
 
-void death::moveUp()
-{
-    if (selectedItemIndex - 1 >= 0)
-    {
+void death::moveUp() {
+    if (selectedItemIndex - 1 >= 0) {
         menuText[selectedItemIndex].setFillColor(sf::Color::White);
         selectedItemIndex--;
         menuText[selectedItemIndex].setFillColor(sf::Color::Red);
     }
 }
 
-void death::moveDown()
-{
-    if (selectedItemIndex + 1 < MAX_NUMBER_OF_ITEMS0)
-    {
+void death::moveDown() {
+    if (selectedItemIndex + 1 < MAX_NUMBER_OF_ITEMS0) {
         menuText[selectedItemIndex].setFillColor(sf::Color::White);
         selectedItemIndex++;
         menuText[selectedItemIndex].setFillColor(sf::Color::Red);

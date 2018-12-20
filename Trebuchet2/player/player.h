@@ -17,7 +17,7 @@ public:
     bool grounded = false;
     bool dead = false;
     bool jump = true;
-    int i = 0,j = 0,k = 0;
+    int i = 0, j = 0, k = 0;
     bool fliker = false;
     sf::Texture pleft;
     sf::Texture pright;
@@ -45,12 +45,12 @@ public:
     ~player() = default;
 
     void Update(float deltaTime) {
-        liv.setPosition(600,10);
+        liv.setPosition(600, 10);
         sf::Vector2f movement(0.0f, 0.0f);
         up = false;
         left = false;
         right = false;
-        if(!dead) {
+        if (!dead) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
                 movement.x -= speed * deltaTime;
                 left = true;
@@ -89,20 +89,20 @@ public:
         //gravity
         if (!grounded and !up) {
             movement.y += speed * deltaTime;
-        }else{jump = true;}
+        } else { jump = true; }
 
         pSprite.move(movement.x, movement.y);
     }
 
-    void draw(sf::RenderWindow &window,sf::View &view) {
-        if(fliker){
-            if(k < 10 or (k < 30 and k > 20)) {
+    void draw(sf::RenderWindow &window, sf::View &view) {
+        if (fliker) {
+            if (k < 10 or (k < 30 and k > 20)) {
                 pSprite.setTexture(misteliv);
             }
             k++;
-            if(k>40){
+            if (k > 40) {
                 life = 0;
-                k=0;
+                k = 0;
                 fliker = false;
             }
         }

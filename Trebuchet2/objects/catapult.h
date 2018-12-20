@@ -4,7 +4,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-class catapult{
+class catapult {
 public:
     sf::Sprite Sprite;
     sf::Texture right;
@@ -14,11 +14,11 @@ public:
     int lengde = 0;
     int map = 0;
 
-    catapult(float x, float y, int len,int mapnr){
+    catapult(float x, float y, int len, int mapnr) {
         right.loadFromFile("data/entities/enemyCatapultRight.png");
         left.loadFromFile("data/entities/enemyCatapultLeft.png");
         Sprite.setTexture(left);
-        Sprite.setPosition(x,y);
+        Sprite.setPosition(x, y);
         lengde = len;
         map = mapnr;
     }
@@ -39,10 +39,13 @@ public:
             movement.x -= speed * deltaTime;
         }
         i++;
-        if (i > (lengde *2)) {i = 0; }
+        if (i > (lengde * 2)) { i = 0; }
         Sprite.move(movement.x, movement.y);
     }
-    int getx(){return static_cast<int>(Sprite.getPosition().x);}
-    int gety(){return static_cast<int>(Sprite.getPosition().y);}
+
+    int getx() { return static_cast<int>(Sprite.getPosition().x); }
+
+    int gety() { return static_cast<int>(Sprite.getPosition().y); }
 };
-#endif //TREBUCHET2_CATAPULT_H
+
+#endif

@@ -4,7 +4,6 @@
 
 #include <SFML/Window.hpp>
 #include <menu/death.h>
-//#include <commctrl.h>
 
 #include "game.h"
 #include "map/map.h"
@@ -20,23 +19,22 @@ const int screenWidth = 1280;
 const int screenHeight = 720;
 
 int mapnr = 0;
-int screenModifier = 1;
 int teller = 0;
 
 player player;
-catapult cat(210,208,100,0);
-catapult cat1(1804,80,300,0);
-catapult cat2(1588,305,100,0);
-catapult cat3(286,241,100,2);
-catapult cat4(945,241,100,2);
-catapult cat5(1133,336,100,2);
-catapult cat6(1244,273,200,2);
-catapult cat7(1029,240,300,1);
-catapult cat8(1350,240,300,1);
-catapult cat9(1785,241,200,1);
+catapult cat(210, 208, 100, 0);
+catapult cat1(1804, 80, 300, 0);
+catapult cat2(1588, 305, 100, 0);
+catapult cat3(286, 241, 100, 2);
+catapult cat4(945, 241, 100, 2);
+catapult cat5(1133, 336, 100, 2);
+catapult cat6(1244, 273, 200, 2);
+catapult cat7(1029, 240, 300, 1);
+catapult cat8(1350, 240, 300, 1);
+catapult cat9(1785, 241, 200, 1);
 
 menu menu(screenWidth, screenHeight);
-death death(screenWidth,screenHeight);
+death death(screenWidth, screenHeight);
 select select(screenWidth, screenHeight);
 
 bool isRunning = true;
@@ -64,6 +62,7 @@ bool Game::init() {
     }
 
     background.setTexture(texture);
+
     //push catapults in a list
     catapults.push_back(cat);
     catapults.push_back(cat1);
@@ -88,9 +87,6 @@ bool Game::init() {
 
     // Copy layer references from map object to Game list
     std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
-
-    // Copy sprite references from map object to Game list
-    //std::copy(map.getSprites().begin(), map.getSprites().end(), std::back_inserter(objects));
 
     // Standard SFML setup
     window.create(sf::VideoMode(screenWidth, screenHeight), "Trebuchet 2: Double Cannonaloo");
@@ -180,8 +176,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                                 player.pSprite.setPosition(30, 200);
                                 player.dead = false;
                                 player.pSprite.setTexture(player.pright);
-                                view.move(-640 * (screenModifier - 1), 0);
-                                screenModifier = 1;
+                                view.setCenter(320, 180);
                                 player.liv.setTexture(player.fullliv);
                                 player.life = 1;
                                 window.setView(view);
@@ -256,14 +251,12 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                             std::cout << "Failed to load map data." << std::endl;
                             return false;
                         }
-                    }
-                    else if (mapnr == 1) {
+                    } else if (mapnr == 1) {
                         if (!map.loadFromFile("data/Forest.json")) {
                             std::cout << "Failed to load map data." << std::endl;
                             return false;
                         }
-                    }
-                    else if (mapnr == 2) {
+                    } else if (mapnr == 2) {
                         if (!map.loadFromFile("data/Snow.json")) {
                             std::cout << "Failed to load map data." << std::endl;
                             return false;
@@ -286,8 +279,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                     player.life = 1;
                     player.liv.setTexture(player.fullliv);
                     player.pSprite.setTexture(player.pright);
-                    view.move(-640 * (screenModifier - 1), 0);
-                    screenModifier = 1;
+                    view.setCenter(320, 180);
                     window.setView(view);
                 }
 
@@ -299,11 +291,13 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
                 //Shoot projectile
                 if (event.key.code == sf::Keyboard::Right) {
-                    projectile bullet(player.getx(), player.gety() +10 , -1 , 1.5, "data/entities/cannonball.png", player.gety(), 35);
+                    projectile bullet(player.getx(), player.gety() + 10, -1, 1.5, "data/entities/cannonball.png",
+                                      player.gety(), 35);
                     bullets.push_back(bullet);
                 }
                 if (event.key.code == sf::Keyboard::Left) {
-                    projectile bullet(player.getx(), player.gety() + 10, -1 , -1.5, "data/entities/cannonball.png", player.gety(), 35);
+                    projectile bullet(player.getx(), player.gety() + 10, -1, -1.5, "data/entities/cannonball.png",
+                                      player.gety(), 35);
                     bullets.push_back(bullet);
                 }
                 if (event.key.code == sf::Keyboard::Up) {
@@ -312,7 +306,8 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                     if (player.left)
                         direction_ball = -2;
 
-                    projectile bullet(player.getx(), player.gety() +10 , -1 , direction_ball, "data/entities/cannonball.png", player.gety(), 50);
+                    projectile bullet(player.getx(), player.gety() + 10, -1, direction_ball,
+                                      "data/entities/cannonball.png", player.gety(), 50);
                     bullets.push_back(bullet);
                 }
                 if (event.key.code == sf::Keyboard::Down) {
@@ -321,7 +316,8 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                     if (player.left)
                         direction_ball = -3.5;
 
-                    projectile bullet(player.getx(), player.gety() +10 , -1 , direction_ball, "data/entities/cannonball.png", player.gety(), 5);
+                    projectile bullet(player.getx(), player.gety() + 10, -1, direction_ball,
+                                      "data/entities/cannonball.png", player.gety(), 5);
                     bullets.push_back(bullet);
                 }
                 break;
@@ -340,7 +336,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         window.setView(view);
 
         // Process and render each object
-        if(!inMenu && !inDeath && !inSelect) {
+        if (!inMenu && !inDeath && !inSelect) {
             for (auto &object: objects) {
                 object->process(deltaTime);
                 object->draw(window);
@@ -394,8 +390,9 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
                 for (auto bull = bullets.begin(); bull != bullets.end(); bull++) {
                     if (layer->getTilemap()[((bull->get_int_X(bull->getlocation_X()) + i) / map.getTileWidth()) +
-                                            ((bull->get_int_X(bull->getlocation_Y()) + j) / map.getTileHeight()) * layer->getWidth()] != 0){
-                       // bull->setSpeed_x(0);
+                                            ((bull->get_int_X(bull->getlocation_Y()) + j) / map.getTileHeight()) *
+                                            layer->getWidth()] != 0) {
+                        // bull->setSpeed_x(0);
                         //bull->setSpeed_y(0);
                         //bullets.erase(it);
                     }
@@ -407,11 +404,11 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         for (int i = 0; i < 21; i += 5) {
             for (int j = 0; j < 21; j += 5) {
                 if (layer->getTilemap()[((player.getx() + i) / map.getTileWidth()) +
-                                        ((player.gety() + j +7) / map.getTileHeight()) * layer->getWidth()] == 52) {
+                                        ((player.gety() + j + 7) / map.getTileHeight()) * layer->getWidth()] == 52) {
                     //dying
                     player.pSprite.setTexture(player.onflame);
                     player.dead = true;
-                    if (teller >200) {
+                    if (teller > 200) {
                         inDeath = true;
                         teller = 0;
                     }
@@ -423,12 +420,12 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         //Gravity check
         if (player.grounded) {
             int k = 0;
-            for(int i= 0;i<36;i+=5){
-                if (layer->getTilemap()[((player.getx()+i-5) / map.getTileWidth()) +
-                                        ((player.gety()+27) / map.getTileHeight()) * layer->getWidth()] == 0) {
-                    k+=1;
+            for (int i = 0; i < 36; i += 5) {
+                if (layer->getTilemap()[((player.getx() + i - 5) / map.getTileWidth()) +
+                                        ((player.gety() + 27) / map.getTileHeight()) * layer->getWidth()] == 0) {
+                    k += 1;
                 }
-                if(k==7){
+                if (k == 7) {
                     player.grounded = false;
                 }
             }
@@ -450,15 +447,14 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         if (player.getx() < 322) {
             view.setCenter(320, 180);
             window.setView(view);
-        }
-        else {
+        } else {
             view.setCenter(player.getx(), 180);
             window.setView(view);
         }
 
         //catapult and player collision
         for (auto it = catapults.begin(); it != catapults.end(); it++) {
-            if(it->map == mapnr) {
+            if (it->map == mapnr) {
                 for (int i = 0; i < 26; i += 3) {
                     if (player.getx() + i > it->getx() && player.getx() + i < it->getx() + 26 &&
                         player.gety() + i > it->gety() && player.gety() + i < it->gety() + 16) {
@@ -477,21 +473,19 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         if (inMenu) {
             window.draw(background);
             menu.draw(window);
-        }else if(inDeath){
+        } else if (inDeath) {
             window.setView(uiView);
             death.draw(window);
-        }
-        else if (inSelect) {
+        } else if (inSelect) {
             select.draw(window);
             loopOnce = true;
-        }
-        else {
+        } else {
             //draws player and enemies on screen
             player.Update(deltaTime);
-            player.draw(window,uiView);
+            player.draw(window, uiView);
             window.setView(view);
             for (auto it = catapults.begin(); it != catapults.end(); it++) {
-                if(it->map == mapnr) {
+                if (it->map == mapnr) {
                     it->Update(deltaTime);
                     it->draw(window);
                 }
@@ -499,10 +493,10 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
             for (auto it = bullets.begin(); it != bullets.end(); it++) {
                 for (auto cat = catapults.begin(); cat != catapults.end(); cat++) {
-                    if(cat->map == mapnr) {
+                    if (cat->map == mapnr) {
                         for (int i = 0; i < 26; i += 3) {
                             if (it->getlocation_X() > cat->getx() && it->getlocation_X() < cat->getx() + 26 &&
-                                    it->getlocation_Y() > cat->gety() && it->getlocation_Y() < cat->gety() + 16) {
+                                it->getlocation_Y() > cat->gety() && it->getlocation_Y() < cat->gety() + 16) {
                                 std::cout << "HIT!" << std::endl;
                                 catapults.erase(cat);
                                 bullets.erase(it);
@@ -518,8 +512,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         }
 
         window.display();
-    }
-    else {
+    } else {
         window.setView(uiView);
         window.draw(text);
         if (!isDrawn) {

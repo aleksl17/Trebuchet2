@@ -5,15 +5,18 @@
 
 #define MAP_CHOICES 4
 
-class select
-{
+class select {
 public:
     select(float width, float height);
-    ~select();
+
+    ~select() = default;
 
     void draw(sf::RenderWindow &window);
+
     void moveUp();
+
     void moveDown();
+
     int getPressedItem() { return selectedItemIndex; }
 
 private:

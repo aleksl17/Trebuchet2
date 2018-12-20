@@ -5,16 +5,16 @@
 
 #include "object.h"
 
-class Sprite : public Object
-{
+class Sprite : public Object {
     // Map needs to access protected/private data
     friend class Map;
 
 public:
-    explicit Sprite(Map& map) : Object(map) {}
+    explicit Sprite(Map &map) : Object(map) {}
 
     void process(float time) override;
-    void draw(sf::RenderWindow& window) override;
+
+    void draw(sf::RenderWindow &window) override;
 
 protected:
     // Object id

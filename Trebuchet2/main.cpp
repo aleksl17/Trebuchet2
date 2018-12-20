@@ -18,7 +18,7 @@
  * https://github.com/open-source-parsers/jsoncpp
  *
  *
- * PROJECT TREBUCHET 2: TITLE IN PROGRESS
+ * PROJECT TREBUCHET 2
  * CREATED BY:
  * Hassan Mohammed Ali
  * Håvard Friborg

@@ -2,10 +2,8 @@
 
 #include <iostream>
 
-menu::menu(float width, float height)
-{
-    if (!font.loadFromFile("data/ShadowsIntoLight.ttf"))
-    {
+menu::menu(float width, float height) {
+    if (!font.loadFromFile("data/ShadowsIntoLight.ttf")) {
         std::cout << "Failed to load font." << std::endl;
     }
 
@@ -32,33 +30,23 @@ menu::menu(float width, float height)
     selectedItemIndex = 0;
 }
 
-menu::~menu()
-{
-}
-
-void menu::draw(sf::RenderWindow &window)
-{
-    for (int i = 0; i < MAX_NUMBER_OF_ITEMS; i++)
-    {
+void menu::draw(sf::RenderWindow &window) {
+    for (int i = 0; i < MAX_NUMBER_OF_ITEMS; i++) {
         window.draw(menuText[i]);
         window.draw(text);
     }
 }
 
-void menu::moveUp()
-{
-    if (selectedItemIndex - 1 >= 0)
-    {
+void menu::moveUp() {
+    if (selectedItemIndex - 1 >= 0) {
         menuText[selectedItemIndex].setFillColor(sf::Color::White);
         selectedItemIndex--;
         menuText[selectedItemIndex].setFillColor(sf::Color::Red);
     }
 }
 
-void menu::moveDown()
-{
-    if (selectedItemIndex + 1 < MAX_NUMBER_OF_ITEMS)
-    {
+void menu::moveDown() {
+    if (selectedItemIndex + 1 < MAX_NUMBER_OF_ITEMS) {
         menuText[selectedItemIndex].setFillColor(sf::Color::White);
         selectedItemIndex++;
         menuText[selectedItemIndex].setFillColor(sf::Color::Red);

@@ -19,16 +19,19 @@ class Object;
 class Game {
 public:
     bool init();
+
     void run();
-    //std::queue<projectile> bullets;
+
     std::vector<projectile> bullets;
+
     std::vector<catapult> catapults;
 
 protected:
-    bool gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>& objects, float deltaTime);
+    bool gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>> &objects, float deltaTime);
 
     // List of game objects
     std::list<std::shared_ptr<Object>> objects;
+
     sf::Clock clock;
 
     sf::Font font;
@@ -48,6 +51,7 @@ protected:
     sf::View uiView;
 
     Map map;
+
 };
 
 #endif

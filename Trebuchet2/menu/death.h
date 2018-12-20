@@ -5,15 +5,18 @@
 
 #define MAX_NUMBER_OF_ITEMS0 2
 
-class death
-{
+class death {
 public:
     death(float width, float height);
-    ~death();
+
+    ~death() = default;
 
     void draw(sf::RenderWindow &window);
+
     void moveUp();
+
     void moveDown();
+
     int getPressedItem() { return selectedItemIndex; }
 
 private:
