@@ -1,9 +1,4 @@
-//
-// Created by havar on 05.12.2018.
-//
-
 #include "projectile.h"
-
 
 projectile::projectile(float x, float y, float s_y, float s_x, const std::string &imgDirectory, float start_Y, float m_h){
 
@@ -24,14 +19,7 @@ projectile::projectile(float x, float y, float s_y, float s_x, const std::string
     pSprite.setPosition(50.0f, 200.0f);
 }
 
-
-
-
-
-
-
 // GETTER AND SETTERS
-
 
 float projectile::getlocation_X() const {
     return location_x;

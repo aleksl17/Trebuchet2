@@ -1,7 +1,3 @@
-//
-// Created by havar on 05.12.2018.
-//
-
 #ifndef TREBUCHET2_PROJECTILE_H
 #define TREBUCHET2_PROJECTILE_H
 
@@ -9,7 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include "map/map.h"
 #include <queue>
-
 
 class projectile {
 
@@ -34,7 +29,6 @@ public:
     int width = 4;
     int height = 4;
 
-
     projectile( float x, float y, float s_y, float s_x, const std::string &imgDirectory, float start_Y, float m_h);
 
     ~projectile() = default;
@@ -42,7 +36,6 @@ public:
     void draw(sf::RenderWindow &window) {
         window.draw(pSprite);
     }
-
 
     void Update() {
         // int location_x = getlocation_X() + getSpeed_x();
@@ -57,7 +50,6 @@ public:
         //pSprite.move(movement.x, movement.y);
     }
 
-
     int getx() { return static_cast<int>(pSprite.getPosition().x); }
 
     int gety() { return static_cast<int>(pSprite.getPosition().y); }
@@ -65,8 +57,6 @@ public:
     void setPos(int x, int y) {
         pSprite.setPosition(x, y);
     }
-
-
 
     float getlocation_X() const;
 
@@ -79,7 +69,6 @@ public:
     int get_int_X(float x);
 
     int get_int_Y(float y);
-
 
     float getWidth() const;
 
@@ -97,15 +86,8 @@ public:
 
     void setSpeed_y(int speed_y);
 
-
-
 private:
     sf::Texture pTexture;
-
-
-
-
 };
 
-
-#endif //TREBUCHET2_PROJECTILE_H
+#endif

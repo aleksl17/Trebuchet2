@@ -456,19 +456,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             window.setView(view);
         }
 
-        if (inMenu) {
-            menu.draw(window);
-        }
-        else {
-            for (auto it = bullets.begin(); it != bullets.end(); it++) {
-                it->Update();
-                it->setPos(it->getlocation_X(), it->getlocation_Y());
-                it->draw(window);
-
-            }
-        }
-
-
         //catapult and player collision
         for (auto it = catapults.begin(); it != catapults.end(); it++) {
             if(it->map == mapnr) {
@@ -509,23 +496,14 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                     it->draw(window);
                 }
             }
+
             for (auto it = bullets.begin(); it != bullets.end(); it++) {
-
-
-
-
-
-
-
-
-
-
-
                 for (auto cat = catapults.begin(); cat != catapults.end(); cat++) {
                     if(cat->map == mapnr) {
                         for (int i = 0; i < 26; i += 3) {
-                            if (it->getlocation_X() + i > cat->getx() && it->getlocation_X() + i < cat->getx() + 26 &&
-                                    it->getlocation_Y() + i > cat->gety() && it->getlocation_Y() + i < cat->gety() + 16) {
+                            if (it->getlocation_X() > cat->getx() && it->getlocation_X() < cat->getx() + 26 &&
+                                    it->getlocation_Y() > cat->gety() && it->getlocation_Y() < cat->gety() + 16) {
+                                std::cout << "HIT!" << std::endl;
                                 catapults.erase(cat);
                                 bullets.erase(it);
                             }
