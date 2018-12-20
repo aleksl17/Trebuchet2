@@ -19,7 +19,7 @@ set(SOURCE_FILES
         projectile/projectile.cpp
         projectile/projectile.h
         menu/menu.cpp
-        menu/menu.h)
+        menu/menu.h menu/death.cpp menu/death.h)
 
 add_executable(Trebuchet2 ${SOURCE_FILES})
 

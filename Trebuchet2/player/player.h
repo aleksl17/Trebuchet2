@@ -4,22 +4,29 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "map/map.h"
+#include "game.h"
 
 class player {
 public:
     sf::Sprite pSprite;
+    sf::Sprite liv;
+    int life = 1;
     bool left = false;
     bool right = false;
     bool up = false;
     bool grounded = false;
     bool dead = false;
     bool jump = true;
-    int i = 0,j = 0;
+    int i = 0,j = 0,k = 0;
+    bool fliker = false;
     sf::Texture pleft;
     sf::Texture pright;
     sf::Texture pleft1;
     sf::Texture pright1;
     sf::Texture onflame;
+    sf::Texture fullliv;
+    sf::Texture tomliv;
+    sf::Texture misteliv;
 
     player() {
         pright1.loadFromFile("data/entities/playerRollRight1.png");
@@ -27,6 +34,10 @@ public:
         pright.loadFromFile("data/entities/playerRollRight.png");
         pleft.loadFromFile("data/entities/playerRollLeft.png");
         onflame.loadFromFile("data/entities/onflame_1.png");
+        fullliv.loadFromFile("data/entities/full_hearth.png");
+        tomliv.loadFromFile("data/entities/empty_hearth.png");
+        misteliv.loadFromFile("data/entities/misteliv.png");
+        liv.setTexture(fullliv);
         pSprite.setTexture(pright);
         pSprite.setPosition(30, 200);
     }
@@ -34,6 +45,7 @@ public:
     ~player() = default;
 
     void Update(float deltaTime) {
+        liv.setPosition(600,10);
         sf::Vector2f movement(0.0f, 0.0f);
         up = false;
         left = false;
@@ -83,7 +95,23 @@ public:
     }
 
     void draw(sf::RenderWindow &window) {
+        if(fliker){
+            if(k < 10 or (k < 30 and k > 20)) {
+                pSprite.setTexture(misteliv);
+            }
+            k++;
+            if(k>40){
+                life = 0;
+                k=0;
+                fliker = false;
+            }
+        }
         window.draw(pSprite);
+        if (getx() > 322) {
+            liv.setPosition(getx()+280,10);
+        }
+
+        window.draw(liv);
     }
 
     int getx() { return static_cast<int>(pSprite.getPosition().x); }
@@ -95,7 +123,6 @@ public:
     }
 
 private:
-    sf::Texture pTexture;
 
     float speed = 100;
 protected:

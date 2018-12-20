@@ -1,7 +1,9 @@
 #include <memory>
 #include <iostream>
+#include <chrono>
 
 #include <SFML/Window.hpp>
+#include <menu/death.h>
 //#include <commctrl.h>
 
 #include "game.h"
@@ -24,10 +26,12 @@ catapult cat(210,208);
 
 
 menu menu(screenWidth, screenHeight);
+death death(screenWidth,screenHeight);
 
 bool isRunning = true;
 bool isDrawn = false;
 bool inMenu = true;
+bool inDeath = false;
 
 bool Game::init() {
     // Load map information from JSON into object list
@@ -115,10 +119,12 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 //Menu keys
                 if (event.key.code == sf::Keyboard::W) {
                     menu.moveUp();
+                    death.moveUp();
                     break;
                 }
                 if (event.key.code == sf::Keyboard::S) {
                     menu.moveDown();
+                    death.moveDown();
                     break;
                 }
                 if (event.key.code == sf::Keyboard::Return) {
@@ -131,6 +137,25 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                             std::cout << "Option button has been pressed" << std::endl;
                             break;
                         case 2:
+                            window.close();
+                            break;
+                        default:
+                            // Ignore the other events
+                            break;
+                    }
+                    switch(death.getPressedItem()){
+                        case 0:
+                            inDeath = false;
+                            player.pSprite.setPosition(30, 200);
+                            player.dead = false;
+                            player.pSprite.setTexture(player.pright);
+                            view.move(-640 * (screenModifier - 1), 0);
+                            screenModifier = 1;
+                            player.liv.setTexture(player.fullliv);
+                            player.life = 1;
+                            window.setView(view);
+                            break;
+                        case 1:
                             window.close();
                             break;
                         default:
@@ -180,6 +205,8 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 if (event.key.code == sf::Keyboard::R) {
                     player.pSprite.setPosition(30, 200);
                     player.dead = false;
+                    player.life = 1;
+                    player.liv.setTexture(player.fullliv);
                     player.pSprite.setTexture(player.pright);
                     view.move(-640 * (screenModifier - 1), 0);
                     screenModifier = 1;
@@ -211,7 +238,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         window.setView(view);
 
         // Process and render each object
-        if(!inMenu) {
+        if(!inMenu and !inDeath) {
             for (auto &object: objects) {
                 object->process(deltaTime);
                 object->draw(window);
@@ -272,7 +299,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                                         ((player.gety() + j +7) / map.getTileHeight()) * layer->getWidth()] == 52) {
                     //dying
                     player.pSprite.setTexture(player.onflame);
-                    player.dead = true;
+                    inDeath = true;
                 }
             }
         }
@@ -303,7 +330,8 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             player.setPos(player.getx(), 335);
         }
 
-        //Camera movement logic
+
+        //Camera moevement logic
         if (player.getx() < 322) {
             view.setCenter(320, 180);
             window.setView(view);
@@ -316,6 +344,9 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         if (inMenu) {
             menu.draw(window);
         }
+        if(inDeath){
+            death.draw(window);
+        }
         else {
             for (auto it = bullets.begin(); it != bullets.end(); it++) {
                 it->Update();
@@ -325,12 +356,15 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
 
-
-
         //catapult and player collision
         for (int i = 0; i < 26; i += 3) {
             if(player.getx() + i > cat.getx() && player.getx() + i < cat.getx() + 26 && player.gety()+ i > cat.gety() && player.gety() +i < cat.gety()+16){
-                std::cout << "catapult collision\n";
+                if(player.life == 1){
+                    player.liv.setTexture(player.tomliv);
+                    player.fliker = true;
+                }else if(player.life == 0){
+                    inDeath = true;
+                }
             }
         }
 
@@ -339,19 +373,19 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         if (inMenu) {
             window.draw(background);
             menu.draw(window);
+        }else if(inDeath){
+            death.draw(window);
         }
         else {
             //draws player and enemies on screen
 
             player.Update(deltaTime);
             player.draw(window);
-
             if(mapnr == 0) {
                 cat.draw(window);
                 cat.Update(deltaTime);
             }
         }
-
         window.display();
 
     }
