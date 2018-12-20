@@ -5,15 +5,17 @@
 #include "projectile.h"
 
 
-projectile::projectile(int x, int y, int s_y, int s_x, const std::string &imgDirectory){
+projectile::projectile(float x, float y, float s_y, float s_x, const std::string &imgDirectory, float start_Y, float m_h){
 
     if (use_once)
         return;
 
     location_x = x;
- location_y = y;
- speed_x = s_x;
- speed_y = s_y;
+    location_y = y;
+    speed_x = s_x;
+    speed_y = s_y;
+    start_y = start_Y;
+    max_height = m_h;
 
     if (!pTexture.loadFromFile(imgDirectory)) {
         std::cerr << "Could not Load projectile Texture From File\n";
@@ -31,7 +33,7 @@ projectile::projectile(int x, int y, int s_y, int s_x, const std::string &imgDir
 // GETTER AND SETTERS
 
 
-int projectile::getlocation_X() const {
+float projectile::getlocation_X() const {
     return location_x;
 }
 
@@ -39,7 +41,7 @@ void projectile::setlocation_X(int x) {
     projectile::location_x = x;
 }
 
-int projectile::getlocation_Y() const {
+float projectile::getlocation_Y() const {
     return location_y;
 }
 
@@ -47,7 +49,7 @@ void projectile::setlocation_Y(int y) {
     projectile::location_y = y;
 }
 
-int projectile::getWidth() const {
+float projectile::getWidth() const {
     return width;
 }
 
@@ -55,7 +57,7 @@ void projectile::setWidth(int width) {
     projectile::width = width;
 }
 
-int projectile::getHeight() const {
+float projectile::getHeight() const {
     return height;
 }
 
@@ -63,7 +65,7 @@ void projectile::setHeight(int height) {
     projectile::height = height;
 }
 
-int projectile::getSpeed_x() const {
+float projectile::getSpeed_x() const {
     return speed_x;
 }
 
@@ -71,10 +73,18 @@ void projectile::setSpeed_x(int speed_x) {
     projectile::speed_x = speed_x;
 }
 
-int projectile::getSpeed_y() const {
+float projectile::getSpeed_y() const {
     return speed_y;
 }
 
 void projectile::setSpeed_y(int speed_y) {
     projectile::speed_y = speed_y;
+}
+
+int projectile::get_int_X(float x){
+    return static_cast<int>(x);
+}
+
+int projectile::get_int_Y(float y){
+    return static_cast<int>(y);
 }

@@ -8,6 +8,7 @@
 #include <stack>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics.hpp>
+#include <cmath>
 
 #include "map/map.h"
 #include "projectile/projectile.h"

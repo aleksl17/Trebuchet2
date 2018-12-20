@@ -298,9 +298,30 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 }
 
                 //Shoot projectile
-                if (event.key.code == sf::Keyboard::Space) {
-                    projectile bullet(player.getx(), player.gety() , 0 , 1, "data/entities/cannonball.png");
-                    //p = &bullet;
+                if (event.key.code == sf::Keyboard::Right) {
+                    projectile bullet(player.getx(), player.gety() +10 , -1 , 1.5, "data/entities/cannonball.png", player.gety(), 35);
+                    bullets.push_back(bullet);
+                }
+                if (event.key.code == sf::Keyboard::Left) {
+                    projectile bullet(player.getx(), player.gety() + 10, -1 , -1.5, "data/entities/cannonball.png", player.gety(), 35);
+                    bullets.push_back(bullet);
+                }
+                if (event.key.code == sf::Keyboard::Up) {
+                    float direction_ball = 2;
+
+                    if (player.left)
+                        direction_ball = -2;
+
+                    projectile bullet(player.getx(), player.gety() +10 , -1 , direction_ball, "data/entities/cannonball.png", player.gety(), 50);
+                    bullets.push_back(bullet);
+                }
+                if (event.key.code == sf::Keyboard::Down) {
+                    float direction_ball = 3.5;
+
+                    if (player.left)
+                        direction_ball = -3.5;
+
+                    projectile bullet(player.getx(), player.gety() +10 , -1 , direction_ball, "data/entities/cannonball.png", player.gety(), 5);
                     bullets.push_back(bullet);
                 }
                 break;
@@ -368,6 +389,15 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                         player.grounded = true;
                         player.pSprite.move(0, -1);
                         player.i = 0;
+                    }
+                }
+
+                for (auto bull = bullets.begin(); bull != bullets.end(); bull++) {
+                    if (layer->getTilemap()[((bull->get_int_X(bull->getlocation_X()) + i) / map.getTileWidth()) +
+                                            ((bull->get_int_X(bull->getlocation_Y()) + j) / map.getTileHeight()) * layer->getWidth()] != 0){
+                       // bull->setSpeed_x(0);
+                        //bull->setSpeed_y(0);
+                        //bullets.erase(it);
                     }
                 }
             }
@@ -480,6 +510,29 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 }
             }
             for (auto it = bullets.begin(); it != bullets.end(); it++) {
+
+
+
+
+
+
+
+
+
+
+
+                for (auto cat = catapults.begin(); cat != catapults.end(); cat++) {
+                    if(cat->map == mapnr) {
+                        for (int i = 0; i < 26; i += 3) {
+                            if (it->getlocation_X() + i > cat->getx() && it->getlocation_X() + i < cat->getx() + 26 &&
+                                    it->getlocation_Y() + i > cat->gety() && it->getlocation_Y() + i < cat->gety() + 16) {
+                                catapults.erase(cat);
+                                bullets.erase(it);
+                            }
+                        }
+                    }
+                }
+
                 it->Update();
                 it->setPos(it->getlocation_X(), it->getlocation_Y());
                 it->draw(window);

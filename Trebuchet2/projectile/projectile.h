@@ -17,22 +17,25 @@ public:
     projectile* p = nullptr;
     bool use_once = false;
     sf::Sprite pSprite;
-    std::string canonball = "data/entities/cannonball.png"; 
+    std::string canonball = "data/entities/cannonball.png";
 
     // Location on screen
-    int location_x = 0;
-    int location_y = 0;
+    float location_x = 0;
+    float location_y = 0;
+
+    float start_y;
+    float max_height;
 
     //Speed of projectile
-    int speed_x = 0;
-    int speed_y = 0;
+    float speed_x = 0;
+    float speed_y = 0;
 
     // Dimensions
     int width = 4;
     int height = 4;
 
 
-    projectile( int x, int y, int s_y, int s_x, const std::string &imgDirectory);
+    projectile( float x, float y, float s_y, float s_x, const std::string &imgDirectory, float start_Y, float m_h);
 
     ~projectile() = default;
 
@@ -45,6 +48,9 @@ public:
         // int location_x = getlocation_X() + getSpeed_x();
         //int location_y = getlocation_Y() + getSpeed_y();
         //sf::Vector2f movement(0.0f, 0.0f);
+        if (location_y <= start_y - max_height)
+            speed_y = -speed_y;
+
         location_x += speed_x;
         location_y += speed_y;
 
@@ -62,27 +68,32 @@ public:
 
 
 
-    int getlocation_X() const;
+    float getlocation_X() const;
 
     void setlocation_X(int x);
 
-    int getlocation_Y() const;
+    float getlocation_Y() const;
 
     void setlocation_Y(int y);
 
-    int getWidth() const;
+    int get_int_X(float x);
+
+    int get_int_Y(float y);
+
+
+    float getWidth() const;
 
     void setWidth(int width);
 
-    int getHeight() const;
+    float getHeight() const;
 
     void setHeight(int height);
 
-    int getSpeed_x() const;
+    float getSpeed_x() const;
 
     void setSpeed_x(int speed_x);
 
-    int getSpeed_y() const;
+    float getSpeed_y() const;
 
     void setSpeed_y(int speed_y);
 
