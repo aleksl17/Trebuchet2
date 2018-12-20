@@ -14,6 +14,7 @@
 #include "objects/catapult.h"
 #include "projectile/projectile.h"
 #include "menu/menu.h"
+#include "menu/select.h"
 
 const int screenWidth = 1280;
 const int screenHeight = 720;
@@ -26,18 +27,20 @@ catapult cat(210,208,100,0);
 catapult cat1(1834,80,200,0);
 catapult cat2(1588,305,100,0);
 
-
 menu menu(screenWidth, screenHeight);
 death death(screenWidth,screenHeight);
+select select(screenWidth, screenHeight);
 
 bool isRunning = true;
 bool isDrawn = false;
 bool inMenu = true;
+bool inSelect = false;
 bool inDeath = false;
+bool loopOnce = false;
 
 bool Game::init() {
     // Load map information from JSON into object list
-    if (!map.loadFromFile("data/Desert.json")) {
+    if (!map.loadFromFile("data/Snow.json")) {
         std::cout << "Failed to load map data." << std::endl;
         return false;
     }
@@ -95,7 +98,6 @@ bool Game::init() {
     // Makes sure player moves continually when key is held down
     window.setKeyRepeatEnabled(true);
 
-
     return true;
 }
 
@@ -123,90 +125,167 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
             case sf::Event::KeyReleased:
                 //Menu keys
-                if (event.key.code == sf::Keyboard::W) {
+                if (event.key.code == sf::Keyboard::W && (inMenu || inDeath || inSelect)) {
                     menu.moveUp();
                     death.moveUp();
+                    select.moveUp();
                     break;
                 }
-                if (event.key.code == sf::Keyboard::S) {
+
+                if (event.key.code == sf::Keyboard::S && (inMenu || inDeath || inSelect)) {
                     menu.moveDown();
                     death.moveDown();
+                    select.moveDown();
                     break;
                 }
-                if (event.key.code == sf::Keyboard::Return) {
-                    switch (menu.getPressedItem()) {
-                        case 0:
-                            std::cout << "Play button has been pressed" << std::endl;
-                            inMenu = false;
-                            break;
-                        case 1:
-                            std::cout << "Option button has been pressed" << std::endl;
-                            break;
-                        case 2:
-                            window.close();
-                            break;
-                        default:
-                            // Ignore the other events
-                            break;
+
+                if (event.key.code == sf::Keyboard::Return && (inMenu || inDeath || inSelect)) {
+                    if (inMenu) {
+                        switch (menu.getPressedItem()) {
+                            case 0:
+                                inMenu = false;
+                                inSelect = true;
+                                isRunning = true;
+                                break;
+                            case 1:
+                                break;
+                            case 2:
+                                window.close();
+                                break;
+                            default:
+                                // Ignore the other events
+                                break;
+                        }
                     }
-                    switch(death.getPressedItem()){
-                        case 0:
-                            inDeath = false;
-                            player.pSprite.setPosition(30, 200);
-                            player.dead = false;
-                            player.pSprite.setTexture(player.pright);
-                            view.move(-640 * (screenModifier - 1), 0);
-                            screenModifier = 1;
-                            player.liv.setTexture(player.fullliv);
-                            player.life = 1;
-                            window.setView(view);
-                            break;
-                        case 1:
-                            window.close();
-                            break;
-                        default:
-                            // Ignore the other events
-                            break;
+
+                    if (inDeath) {
+                        switch (death.getPressedItem()) {
+                            case 0:
+                                inDeath = false;
+                                player.pSprite.setPosition(30, 200);
+                                player.dead = false;
+                                player.pSprite.setTexture(player.pright);
+                                view.move(-640 * (screenModifier - 1), 0);
+                                screenModifier = 1;
+                                player.liv.setTexture(player.fullliv);
+                                player.life = 1;
+                                window.setView(view);
+                                break;
+                            case 1:
+                                window.close();
+                                break;
+                            default:
+                                // Ignore the other events
+                                break;
+                        }
+                    }
+
+                    if (loopOnce && inSelect) {
+                        switch (select.getPressedItem()) {
+                            case 0:
+                                mapnr = 2;
+                                objects.clear();
+                                if (!map.loadFromFile("data/Snow.json")) {
+                                    std::cout << "Failed to load map data." << std::endl;
+                                    return false;
+                                }
+                                std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
+                                inSelect = false;
+                                loopOnce = false;
+                                break;
+                            case 1:
+                                mapnr = 0;
+                                objects.clear();
+                                if (!map.loadFromFile("data/Desert.json")) {
+                                    std::cout << "Failed to load map data." << std::endl;
+                                    return false;
+                                }
+                                std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
+                                inSelect = false;
+                                loopOnce = false;
+                                break;
+                            case 2:
+                                mapnr = 1;
+                                objects.clear();
+                                if (!map.loadFromFile("data/Forest.json")) {
+                                    std::cout << "Failed to load map data." << std::endl;
+                                    return false;
+                                }
+                                std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
+                                inSelect = false;
+                                loopOnce = false;
+                                break;
+                            case 3:
+                                inSelect = false;
+                                loopOnce = false;
+                                inMenu = true;
+                                break;
+                            default:
+                                // Ignore the other events
+                                break;
+                        }
                     }
                 }
+
                 //Pause game
                 if (event.key.code == sf::Keyboard::P) {
                     isRunning = !isRunning;
                 }
+
                 // Reload map on F5
                 if (event.key.code == sf::Keyboard::F5) {
                     objects.clear();
 
-                    if (!map.loadFromFile("data/Desert.json")) {
-                        std::cout << "Failed to reload map data." << std::endl;
-                        return false;
+                    if (mapnr == 0) {
+                        if (!map.loadFromFile("data/Desert.json")) {
+                            std::cout << "Failed to load map data." << std::endl;
+                            return false;
+                        }
+                    }
+                    else if (mapnr == 1) {
+                        if (!map.loadFromFile("data/Forest.json")) {
+                            std::cout << "Failed to load map data." << std::endl;
+                            return false;
+                        }
+                    }
+                    else if (mapnr == 2) {
+                        if (!map.loadFromFile("data/Snow.json")) {
+                            std::cout << "Failed to load map data." << std::endl;
+                            return false;
+                        }
                     }
                     std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
                     //std::copy(map.getSprites().begin(), map.getSprites().end(), std::back_inserter(objects));
                 }
+
                 // Exit program on escape
                 if (event.key.code == sf::Keyboard::Escape) {
                     window.close();
                     return false;
                 }
+
                 //change map
                 if (event.key.code == sf::Keyboard::M) {
                     if (mapnr == 0) {
-                        map.loadFromFile("data/Forest.json");
+                        objects.clear();
+                        map.loadFromFile("data/Forest.json"); //1
                         std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
                         mapnr++;
                     }
                     else if (mapnr == 1) {
-                        map.loadFromFile("data/Snow.json");
+                        objects.clear();
+                        map.loadFromFile("data/Snow.json"); //2
                         std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
                         mapnr++;
                     }
                     else if (mapnr == 2) {
-                        map.loadFromFile("data/Desert.json");
+                        objects.clear();
+                        map.loadFromFile("data/Desert.json"); //0
                         std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
                         mapnr = 0;
                     }
                 }
+
                 //respawn
                 if (event.key.code == sf::Keyboard::R) {
                     player.pSprite.setPosition(30, 200);
@@ -218,11 +297,14 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                     screenModifier = 1;
                     window.setView(view);
                 }
+
                 //Displays current position of player
                 if (event.key.code == sf::Keyboard::J) {
                     std::cout << "Player position: X = " << player.getx() << " , Y = " << player.gety()
                               << std::endl;
                 }
+
+                //Shoot projectile
                 if (event.key.code == sf::Keyboard::Space) {
                     projectile bullet(player.getx(), player.gety() , 0 , 1, "data/entities/cannonball.png");
                     //p = &bullet;
@@ -244,7 +326,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         window.setView(view);
 
         // Process and render each object
-        if(!inMenu and !inDeath) {
+        if(!inMenu && !inDeath && !inSelect) {
             for (auto &object: objects) {
                 object->process(deltaTime);
                 object->draw(window);
@@ -310,7 +392,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
 
-
         //Gravity check
         if (player.grounded) {
             int k = 0;
@@ -336,7 +417,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             player.setPos(player.getx(), 335);
         }
 
-
         //Camera moevement logic
         if (player.getx() < 322) {
             view.setCenter(320, 180);
@@ -359,6 +439,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
 
+
         //catapult and player collision
         for (auto it = catapults.begin(); it != catapults.end(); it++) {
             if(it->map == mapnr) {
@@ -376,7 +457,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             }
         }
 
-        //Draw main menu
+        //Draw main menu, death screen and map select screen
         if (inMenu) {
             window.draw(background);
             menu.draw(window);
@@ -384,9 +465,12 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             window.setView(uiView);
             death.draw(window);
         }
+        else if (inSelect) {
+            select.draw(window);
+            loopOnce = true;
+        }
         else {
             //draws player and enemies on screen
-
             player.Update(deltaTime);
             player.draw(window,uiView);
             window.setView(view);
@@ -396,9 +480,14 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                     it->draw(window);
                 }
             }
+            for (auto it = bullets.begin(); it != bullets.end(); it++) {
+                it->Update();
+                it->setPos(it->getlocation_X(), it->getlocation_Y());
+                it->draw(window);
+            }
         }
-        window.display();
 
+        window.display();
     }
     else {
         window.setView(uiView);

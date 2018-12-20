@@ -1,7 +1,3 @@
-//
-// Created by Vebjo on 19/12/2018.
-//
-
 #ifndef TREBUCHET2_DEATH_H
 #define TREBUCHET2_DEATH_H
 
@@ -27,4 +23,4 @@ private:
     sf::Text text;
 };
 
-#endif //TREBUCHET2_DEATH_H
+#endif

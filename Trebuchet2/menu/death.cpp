@@ -8,6 +8,7 @@ death::death(float width, float height)
     {
         std::cout << "Failed to load font." << std::endl;
     }
+
     text.setFont(font);
     text.setFillColor(sf::Color::White);
     text.setString("Catapult won");
@@ -58,4 +59,3 @@ void death::moveDown()
         menuText[selectedItemIndex].setFillColor(sf::Color::Red);
     }
 }
-

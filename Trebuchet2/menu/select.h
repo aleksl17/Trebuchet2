@@ -1,15 +1,15 @@
-#ifndef TREBUCHET2_MENU_H
-#define TREBUCHET2_MENU_H
+#ifndef TREBUCHET2_SELECT_H
+#define TREBUCHET2_SELECT_H
 
 #include "SFML/Graphics.hpp"
 
-#define MAX_NUMBER_OF_ITEMS 3
+#define MAP_CHOICES 4
 
-class menu
+class select
 {
 public:
-    menu(float width, float height);
-    ~menu();
+    select(float width, float height);
+    ~select();
 
     void draw(sf::RenderWindow &window);
     void moveUp();
@@ -19,7 +19,7 @@ public:
 private:
     int selectedItemIndex;
     sf::Font font;
-    sf::Text menuText[MAX_NUMBER_OF_ITEMS];
+    sf::Text menuText[MAP_CHOICES];
     sf::Text text;
 };
 
