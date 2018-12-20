@@ -11,6 +11,7 @@
 
 #include "map/map.h"
 #include "projectile/projectile.h"
+#include "objects/catapult.h"
 
 class Object;
 
@@ -20,6 +21,7 @@ public:
     void run();
     //std::queue<projectile> bullets;
     std::vector<projectile> bullets;
+    std::vector<catapult> catapults;
 
 protected:
     bool gameTick(sf::RenderWindow& window, std::list<std::shared_ptr<Object>>& objects, float deltaTime);

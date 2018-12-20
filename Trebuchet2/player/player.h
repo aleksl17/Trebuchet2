@@ -94,7 +94,7 @@ public:
         pSprite.move(movement.x, movement.y);
     }
 
-    void draw(sf::RenderWindow &window) {
+    void draw(sf::RenderWindow &window,sf::View &view) {
         if(fliker){
             if(k < 10 or (k < 30 and k > 20)) {
                 pSprite.setTexture(misteliv);
@@ -107,10 +107,8 @@ public:
             }
         }
         window.draw(pSprite);
-        if (getx() > 322) {
-            liv.setPosition(getx()+280,10);
-        }
 
+        window.setView(view);
         window.draw(liv);
     }
 

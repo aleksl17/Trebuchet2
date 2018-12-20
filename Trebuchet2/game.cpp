@@ -22,7 +22,9 @@ int mapnr = 0;
 int screenModifier = 1;
 
 player player;
-catapult cat(210,208);
+catapult cat(210,208,100,0);
+catapult cat1(1834,80,200,0);
+catapult cat2(1588,305,100,0);
 
 
 menu menu(screenWidth, screenHeight);
@@ -51,6 +53,10 @@ bool Game::init() {
     }
 
     background.setTexture(texture);
+    //push catapults in a list
+    catapults.push_back(cat);
+    catapults.push_back(cat1);
+    catapults.push_back(cat2);
 
     //Text properties
     text.setFont(font);
@@ -344,9 +350,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         if (inMenu) {
             menu.draw(window);
         }
-        if(inDeath){
-            death.draw(window);
-        }
         else {
             for (auto it = bullets.begin(); it != bullets.end(); it++) {
                 it->Update();
@@ -357,33 +360,41 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         }
 
         //catapult and player collision
-        for (int i = 0; i < 26; i += 3) {
-            if(player.getx() + i > cat.getx() && player.getx() + i < cat.getx() + 26 && player.gety()+ i > cat.gety() && player.gety() +i < cat.gety()+16){
-                if(player.life == 1){
-                    player.liv.setTexture(player.tomliv);
-                    player.fliker = true;
-                }else if(player.life == 0){
-                    inDeath = true;
+        for (auto it = catapults.begin(); it != catapults.end(); it++) {
+            if(it->map == mapnr) {
+                for (int i = 0; i < 26; i += 3) {
+                    if (player.getx() + i > it->getx() && player.getx() + i < it->getx() + 26 &&
+                        player.gety() + i > it->gety() && player.gety() + i < it->gety() + 16) {
+                        if (player.life == 1) {
+                            player.liv.setTexture(player.tomliv);
+                            player.fliker = true;
+                        } else if (player.life == 0) {
+                            inDeath = true;
+                        }
+                    }
                 }
             }
         }
-
 
         //Draw main menu
         if (inMenu) {
             window.draw(background);
             menu.draw(window);
         }else if(inDeath){
+            window.setView(uiView);
             death.draw(window);
         }
         else {
             //draws player and enemies on screen
 
             player.Update(deltaTime);
-            player.draw(window);
-            if(mapnr == 0) {
-                cat.draw(window);
-                cat.Update(deltaTime);
+            player.draw(window,uiView);
+            window.setView(view);
+            for (auto it = catapults.begin(); it != catapults.end(); it++) {
+                if(it->map == mapnr) {
+                    it->Update(deltaTime);
+                    it->draw(window);
+                }
             }
         }
         window.display();

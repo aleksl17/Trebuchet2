@@ -16,12 +16,12 @@ death::death(float width, float height)
     menuText[0].setFont(font);
     menuText[0].setFillColor(sf::Color::Red);
     menuText[0].setString("Play Again");
-    menuText[0].setPosition(sf::Vector2f(width / 4, height / (MAX_NUMBER_OF_ITEMS + 4) * 1));
+    menuText[0].setPosition(sf::Vector2f(width / 4, height / (MAX_NUMBER_OF_ITEMS0 + 4) * 1));
 
     menuText[1].setFont(font);
     menuText[1].setFillColor(sf::Color::White);
     menuText[1].setString("Exit");
-    menuText[1].setPosition(sf::Vector2f(width / 4, height / (MAX_NUMBER_OF_ITEMS + 4) * 2));
+    menuText[1].setPosition(sf::Vector2f(width / 4, height / (MAX_NUMBER_OF_ITEMS0 + 4) * 2));
 
     selectedItemIndex = 0;
 }
@@ -32,7 +32,7 @@ death::~death()
 
 void death::draw(sf::RenderWindow &window)
 {
-    for (int i = 0; i < MAX_NUMBER_OF_ITEMS; i++)
+    for (int i = 0; i < MAX_NUMBER_OF_ITEMS0; i++)
     {
         window.draw(menuText[i]);
         window.draw(text);
@@ -51,7 +51,7 @@ void death::moveUp()
 
 void death::moveDown()
 {
-    if (selectedItemIndex + 1 < MAX_NUMBER_OF_ITEMS)
+    if (selectedItemIndex + 1 < MAX_NUMBER_OF_ITEMS0)
     {
         menuText[selectedItemIndex].setFillColor(sf::Color::White);
         selectedItemIndex++;
@@ -59,5 +59,3 @@ void death::moveDown()
     }
 }
 
-
-#include "death.h"

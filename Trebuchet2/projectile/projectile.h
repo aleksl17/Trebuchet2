@@ -17,7 +17,7 @@ public:
     projectile* p = nullptr;
     bool use_once = false;
     sf::Sprite pSprite;
-    std::string canonball = "data/entities/cannonball.png";
+    std::string canonball = "data/entities/cannonball.png"; 
 
     // Location on screen
     int location_x = 0;

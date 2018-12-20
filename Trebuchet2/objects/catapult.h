@@ -11,13 +11,19 @@ public:
     sf::Texture left;
     int speed = 15;
     int i = 0;
+    int lengde = 0;
+    int map = 0;
 
-    catapult(float x, float y){
+    catapult(float x, float y, int len,int mapnr){
         right.loadFromFile("data/entities/enemyCatapultRight.png");
         left.loadFromFile("data/entities/enemyCatapultLeft.png");
         Sprite.setTexture(left);
         Sprite.setPosition(x,y);
+        lengde = len;
+        map = mapnr;
     }
+
+    ~catapult() = default;
 
     void draw(sf::RenderWindow &window) {
         window.draw(Sprite);
@@ -25,7 +31,7 @@ public:
 
     void Update(float deltaTime) {
         sf::Vector2f movement(0.0f, 0.0f);
-        if (i < 100) {
+        if (i < lengde) {
             Sprite.setTexture(right);
             movement.x += speed * deltaTime;
         } else {
@@ -33,7 +39,7 @@ public:
             movement.x -= speed * deltaTime;
         }
         i++;
-        if (i > 200) {i = 0; }
+        if (i > (lengde *2)) {i = 0; }
         Sprite.move(movement.x, movement.y);
     }
     int getx(){return static_cast<int>(Sprite.getPosition().x);}

@@ -7,7 +7,7 @@
 
 #include "SFML/Graphics.hpp"
 
-#define MAX_NUMBER_OF_ITEMS 2
+#define MAX_NUMBER_OF_ITEMS0 2
 
 class death
 {
@@ -23,7 +23,7 @@ public:
 private:
     int selectedItemIndex;
     sf::Font font;
-    sf::Text menuText[MAX_NUMBER_OF_ITEMS];
+    sf::Text menuText[MAX_NUMBER_OF_ITEMS0];
     sf::Text text;
 };
 
