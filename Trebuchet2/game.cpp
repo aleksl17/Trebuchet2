@@ -21,11 +21,19 @@ const int screenHeight = 720;
 
 int mapnr = 0;
 int screenModifier = 1;
+int teller = 0;
 
 player player;
 catapult cat(210,208,100,0);
-catapult cat1(1834,80,200,0);
+catapult cat1(1804,80,300,0);
 catapult cat2(1588,305,100,0);
+catapult cat3(286,241,100,2);
+catapult cat4(945,241,100,2);
+catapult cat5(1133,336,100,2);
+catapult cat6(1244,273,200,2);
+catapult cat7(1029,240,300,1);
+catapult cat8(1350,240,300,1);
+catapult cat9(1785,241,200,1);
 
 menu menu(screenWidth, screenHeight);
 death death(screenWidth,screenHeight);
@@ -60,6 +68,13 @@ bool Game::init() {
     catapults.push_back(cat);
     catapults.push_back(cat1);
     catapults.push_back(cat2);
+    catapults.push_back(cat3);
+    catapults.push_back(cat4);
+    catapults.push_back(cat5);
+    catapults.push_back(cat6);
+    catapults.push_back(cat7);
+    catapults.push_back(cat8);
+    catapults.push_back(cat9);
 
     //Text properties
     text.setFont(font);
@@ -264,28 +279,6 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                     return false;
                 }
 
-                //change map
-                if (event.key.code == sf::Keyboard::M) {
-                    if (mapnr == 0) {
-                        objects.clear();
-                        map.loadFromFile("data/Forest.json"); //1
-                        std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
-                        mapnr++;
-                    }
-                    else if (mapnr == 1) {
-                        objects.clear();
-                        map.loadFromFile("data/Snow.json"); //2
-                        std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
-                        mapnr++;
-                    }
-                    else if (mapnr == 2) {
-                        objects.clear();
-                        map.loadFromFile("data/Desert.json"); //0
-                        std::copy(map.getLayers().begin(), map.getLayers().end(), std::back_inserter(objects));
-                        mapnr = 0;
-                    }
-                }
-
                 //respawn
                 if (event.key.code == sf::Keyboard::R) {
                     player.pSprite.setPosition(30, 200);
@@ -387,7 +380,12 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                                         ((player.gety() + j +7) / map.getTileHeight()) * layer->getWidth()] == 52) {
                     //dying
                     player.pSprite.setTexture(player.onflame);
-                    inDeath = true;
+                    player.dead = true;
+                    if (teller >200) {
+                        inDeath = true;
+                        teller = 0;
+                    }
+                    teller++;
                 }
             }
         }
@@ -415,6 +413,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         }
         if (player.gety() > 335 && player.gety() < 338) {
             player.setPos(player.getx(), 335);
+            inDeath = true;
         }
 
         //Camera moevement logic
