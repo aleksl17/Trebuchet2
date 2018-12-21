@@ -23,7 +23,9 @@ set(SOURCE_FILES
         menu/death.cpp
         menu/death.h
         menu/select.cpp
-        menu/select.h)
+        menu/select.h
+        menu/victory.cpp
+        menu/victory.h)
 
 add_executable(Trebuchet2 ${SOURCE_FILES})
 

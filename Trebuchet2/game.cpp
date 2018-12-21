@@ -14,6 +14,7 @@
 #include "projectile/projectile.h"
 #include "menu/menu.h"
 #include "menu/select.h"
+#include "menu/victory.h"
 
 const int screenWidth = 1280;
 const int screenHeight = 720;
@@ -24,18 +25,19 @@ int teller = 0;
 player player;
 catapult cat(210, 208, 100, 0);
 catapult cat1(1804, 80, 300, 0);
-catapult cat2(1588, 305, 100, 0);
+catapult cat2(1588, 304, 100, 0);
 catapult cat3(286, 241, 100, 2);
 catapult cat4(945, 241, 100, 2);
 catapult cat5(1133, 336, 100, 2);
 catapult cat6(1244, 273, 200, 2);
-catapult cat7(1029, 240, 300, 1);
+catapult cat7(1090, 240, 300, 1);
 catapult cat8(1350, 240, 300, 1);
 catapult cat9(1785, 241, 200, 1);
 
 menu menu(screenWidth, screenHeight);
 death death(screenWidth, screenHeight);
 select select(screenWidth, screenHeight);
+victory victory(screenWidth, screenHeight);
 
 bool isRunning = true;
 bool isDrawn = false;
@@ -43,6 +45,7 @@ bool inMenu = true;
 bool inSelect = false;
 bool inDeath = false;
 bool loopOnce = false;
+bool inVictory = false;
 
 bool Game::init() {
     // Load map information from JSON into object list
@@ -136,21 +139,23 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
             case sf::Event::KeyReleased:
                 //Menu keys
-                if (event.key.code == sf::Keyboard::W && (inMenu || inDeath || inSelect)) {
+                if (event.key.code == sf::Keyboard::W && (inMenu || inDeath || inSelect || inVictory)) {
                     menu.moveUp();
                     death.moveUp();
                     select.moveUp();
+                    victory.moveUp();
                     break;
                 }
 
-                if (event.key.code == sf::Keyboard::S && (inMenu || inDeath || inSelect)) {
+                if (event.key.code == sf::Keyboard::S && (inMenu || inDeath || inSelect || inVictory)) {
                     menu.moveDown();
                     death.moveDown();
                     select.moveDown();
+                    victory.moveDown();
                     break;
                 }
 
-                if (event.key.code == sf::Keyboard::Return && (inMenu || inDeath || inSelect)) {
+                if (event.key.code == sf::Keyboard::Return && (inMenu || inDeath || inSelect || inVictory)) {
                     if (inMenu) {
                         switch (menu.getPressedItem()) {
                             case 0:
@@ -179,6 +184,30 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                                 view.setCenter(320, 180);
                                 player.liv.setTexture(player.fullliv);
                                 player.life = 1;
+                                window.setView(view);
+                                break;
+                            case 1:
+                                window.close();
+                                break;
+                            default:
+                                // Ignore the other events
+                                break;
+                        }
+                    }
+
+                    if (inVictory) {
+                        switch (victory.getPressedItem()) {
+                            case 0:
+                                inMenu = false;
+                                inVictory = false;
+                                inSelect = true;
+                                isRunning = true;
+                                player.pSprite.setPosition(30, 200);
+                                player.dead = false;
+                                player.life = 1;
+                                player.liv.setTexture(player.fullliv);
+                                player.pSprite.setTexture(player.pright);
+                                view.setCenter(320, 180);
                                 window.setView(view);
                                 break;
                             case 1:
@@ -438,6 +467,9 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         if (player.gety() > -3 && player.gety() < 0) {
             player.setPos(player.getx(), 0);
         }
+        if (player.getx() > 2507 && player.getx() < 2510) {
+            inVictory = true;
+        }
         if (player.gety() > 335 && player.gety() < 338) {
             player.setPos(player.getx(), 335);
             inDeath = true;
@@ -479,7 +511,12 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
         } else if (inSelect) {
             select.draw(window);
             loopOnce = true;
-        } else {
+        } else if (inVictory) {
+            window.setView(uiView);
+            window.draw(background);
+            victory.draw(window);
+        }
+        else {
             //draws player and enemies on screen
             player.Update(deltaTime);
             player.draw(window, uiView);
