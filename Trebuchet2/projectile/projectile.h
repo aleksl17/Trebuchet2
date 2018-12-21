@@ -11,7 +11,7 @@ class projectile {
 public:
     bool use_once = false;
     sf::Sprite pSprite;
-    std::string canonball = "data/entities/cannonball.png";
+    sf::Texture cannonball;
 
     // Location on screen
     float location_x = 0;
@@ -40,6 +40,7 @@ public:
         // int location_x = getlocation_X() + getSpeed_x();
         //int location_y = getlocation_Y() + getSpeed_y();
         //sf::Vector2f movement(0.0f, 0.0f);
+        pSprite.setTexture(cannonball);
         if (location_y <= start_y - max_height)
             speed_y = -speed_y;
 

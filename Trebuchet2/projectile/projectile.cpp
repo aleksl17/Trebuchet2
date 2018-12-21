@@ -13,10 +13,8 @@ projectile::projectile(float x, float y, float s_y, float s_x, const std::string
     start_y = start_Y;
     max_height = m_h;
 
-    if (!pTexture.loadFromFile(imgDirectory)) {
-        std::cerr << "Could not Load projectile Texture From File\n";
-    }
-    pSprite.setTexture(pTexture);
+    cannonball.loadFromFile("data/entities/cannonball.png");
+    pSprite.setTexture(cannonball);
     pSprite.setPosition(50.0f, 200.0f);
 }
 
