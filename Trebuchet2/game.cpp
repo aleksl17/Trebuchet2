@@ -21,7 +21,6 @@ const int screenHeight = 720;
 
 int mapnr = 0;
 int teller = 0;
-int ammo = 10;
 
 player player;
 catapult cat(210, 208, 100, 0);
@@ -330,16 +329,18 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
                 //Shoot projectile
                 if (ammo > 0) {
-                    ammo--;
+
                     if (event.key.code == sf::Keyboard::Right) {
                         projectile bullet(player.getx(), player.gety() + 10, -1, 1.5, "data/entities/cannonball.png",
                                           player.gety(), 35);
                         bullets.push_back(bullet);
+                        ammo--;
                     }
                     if (event.key.code == sf::Keyboard::Left) {
                         projectile bullet(player.getx(), player.gety() + 10, -1, -1.5, "data/entities/cannonball.png",
                                           player.gety(), 35);
                         bullets.push_back(bullet);
+                        ammo--;
                     }
                     if (event.key.code == sf::Keyboard::Up) {
                         float direction_ball = 2;
@@ -350,6 +351,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                         projectile bullet(player.getx(), player.gety() + 10, -1, direction_ball,
                                           "data/entities/cannonball.png", player.gety(), 50);
                         bullets.push_back(bullet);
+                        ammo--;
                     }
                     if (event.key.code == sf::Keyboard::Down) {
                         float direction_ball = 3.5;
@@ -360,6 +362,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                         projectile bullet(player.getx(), player.gety() + 10, -1, direction_ball,
                                           "data/entities/cannonball.png", player.gety(), 5);
                         bullets.push_back(bullet);
+                        ammo--;
                     }
                 }
                 break;

@@ -26,6 +26,9 @@ public:
 
     std::vector<catapult> catapults;
 
+    int ammo = 10;
+
+
 protected:
     bool gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>> &objects, float deltaTime);
 
