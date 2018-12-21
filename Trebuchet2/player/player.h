@@ -19,6 +19,7 @@ public:
     bool jump = true;
     int i = 0, j = 0, k = 0;
     bool fliker = false;
+    bool is_looking_right = true;
     sf::Texture pleft;
     sf::Texture pright;
     sf::Texture pleft1;
@@ -54,6 +55,7 @@ public:
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
                 movement.x -= speed * deltaTime;
                 left = true;
+                is_looking_right = false;
                 if (j < 10) {
                     pSprite.setTexture(pleft);
 
@@ -64,6 +66,7 @@ public:
                 if (j > 20) { j = 0; }
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                is_looking_right = true;
                 movement.x += speed * deltaTime;
                 right = true;
                 if (j < 10) {

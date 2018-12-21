@@ -339,7 +339,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 if (event.key.code == sf::Keyboard::Up) {
                     float direction_ball = 2;
 
-                    if (player.left)
+                    if (!player.is_looking_right)
                         direction_ball = -2;
 
                     projectile bullet(player.getx(), player.gety() + 10, -1, direction_ball,
@@ -349,7 +349,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                 if (event.key.code == sf::Keyboard::Down) {
                     float direction_ball = 3.5;
 
-                    if (player.left)
+                    if (!player.is_looking_right)
                         direction_ball = -3.5;
 
                     projectile bullet(player.getx(), player.gety() + 10, -1, direction_ball,
@@ -424,17 +424,10 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
                     }
                 }
 
-                for (auto bull = bullets.begin(); bull != bullets.end(); bull++) {
-                    if (layer->getTilemap()[((bull->get_int_X(bull->getlocation_X()) + i) / map.getTileWidth()) +
-                                            ((bull->get_int_X(bull->getlocation_Y()) + j) / map.getTileHeight()) *
-                                            layer->getWidth()] != 0) {
-                        // bull->setSpeed_x(0);
-                        //bull->setSpeed_y(0);
-                        //bullets.erase(it);
-                    }
-                }
+
             }
         }
+
 
         //player lava check
         for (int i = 0; i < 21; i += 5) {
@@ -537,16 +530,30 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
             for (auto it = bullets.begin(); it != bullets.end(); it++) {
                 for (auto cat = catapults.begin(); cat != catapults.end(); cat++) {
-                    if (cat->map == mapnr) {
+                    //if (cat->map == mapnr) {
                         for (int i = 0; i < 26; i += 3) {
                             if (it->getlocation_X() > cat->getx() && it->getlocation_X() < cat->getx() + 26 &&
                                 it->getlocation_Y() > cat->gety() && it->getlocation_Y() < cat->gety() + 16) {
                                 std::cout << "HIT!" << std::endl;
                                 catapults.erase(cat);
-                                bullets.erase(it);
+                                //Game::bullets.erase(it);
+                                it->setZero();
                             }
                         }
-                    }
+                    //}
+                }
+                //if (it->getlocation_Y() == 400 && it->getlocation_X() == 0)
+                 //   break;
+
+                if (layer->getTilemap()[((it->get_int_X(it->getlocation_X()) ) / map.getTileWidth()) +
+                                        ((it->get_int_X(it->getlocation_Y()) ) / map.getTileHeight()) *
+                                        layer->getWidth()] != 0) {
+                    // bull->setSpeed_x(0);
+                    //bull->setSpeed_y(0);
+                    //bullets.erase(it);
+                    it->setZero();
+                    //Game::bullets.erase(it);
+                    std::cout << "Removed for hiting ground\n";
                 }
 
                 it->Update();

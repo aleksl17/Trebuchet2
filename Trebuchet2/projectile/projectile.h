@@ -57,6 +57,8 @@ public:
         pSprite.setPosition(x, y);
     }
 
+    void setZero();
+
     float getlocation_X() const;
 
     void setlocation_X(int x);

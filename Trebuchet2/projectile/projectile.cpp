@@ -20,6 +20,12 @@ projectile::projectile(float x, float y, float s_y, float s_x, const std::string
     pSprite.setPosition(50.0f, 200.0f);
 }
 
+void projectile::setZero() {
+    location_y = 400;
+    location_x = 0;
+    speed_y = speed_x = 0;
+}
+
 // GETTER AND SETTERS
 
 float projectile::getlocation_X() const {
