@@ -515,8 +515,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             window.setView(uiView);
             window.draw(victoryBackground);
             victory.draw(window);
-        }
-        else {
+        } else {
             //draws player and enemies on screen
             player.Update(deltaTime);
             player.draw(window, uiView);
@@ -530,35 +529,39 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
 
             for (auto it = bullets.begin(); it != bullets.end(); it++) {
                 for (auto cat = catapults.begin(); cat != catapults.end(); cat++) {
-                    //if (cat->map == mapnr) {
+                    if (cat->map == mapnr) {
                         for (int i = 0; i < 26; i += 3) {
                             if (it->getlocation_X() > cat->getx() && it->getlocation_X() < cat->getx() + 26 &&
                                 it->getlocation_Y() > cat->gety() && it->getlocation_Y() < cat->gety() + 16) {
                                 std::cout << "HIT!" << std::endl;
                                 catapults.erase(cat);
-                                //Game::bullets.erase(it);
                                 it->setZero();
                             }
                         }
-                    //}
+                    }
                 }
-                //if (it->getlocation_Y() == 400 && it->getlocation_X() == 0)
-                 //   break;
 
-                if (layer->getTilemap()[((it->get_int_X(it->getlocation_X()) ) / map.getTileWidth()) +
-                                        ((it->get_int_X(it->getlocation_Y()) ) / map.getTileHeight()) *
+
+                if (layer->getTilemap()[((it->get_int_X(it->getlocation_X())) / map.getTileWidth()) +
+                                        ((it->get_int_X(it->getlocation_Y())) / map.getTileHeight()) *
                                         layer->getWidth()] != 0) {
-                    // bull->setSpeed_x(0);
-                    //bull->setSpeed_y(0);
-                    //bullets.erase(it);
                     it->setZero();
-                    //Game::bullets.erase(it);
-                    std::cout << "Removed for hiting ground\n";
                 }
 
                 it->Update();
                 it->setPos(it->getlocation_X(), it->getlocation_Y());
                 it->draw(window);
+            }
+
+            //Fjerner bullets som er lagt vekk
+
+            for (auto it = bullets.begin(); it != bullets.end();) {
+                if (it->getlocation_Y() == 400 && it->getlocation_X() == 0) {
+                    it = bullets.erase(it);
+                    std::cout << "removed\n";
+                } else {
+                    ++it;
+                }
             }
         }
 

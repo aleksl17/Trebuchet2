@@ -53,7 +53,7 @@ public:
 
     int gety() { return static_cast<int>(pSprite.getPosition().y); }
 
-    void setPos(int x, int y) {
+    void setPos(float x, float y) {
         pSprite.setPosition(x, y);
     }
 
@@ -61,31 +61,23 @@ public:
 
     float getlocation_X() const;
 
-    void setlocation_X(int x);
+    void setlocation_X(float x);
 
     float getlocation_Y() const;
 
-    void setlocation_Y(int y);
+    void setlocation_Y(float y);
 
     int get_int_X(float x);
 
     int get_int_Y(float y);
 
-    float getWidth() const;
-
-    void setWidth(int width);
-
-    float getHeight() const;
-
-    void setHeight(int height);
-
     float getSpeed_x() const;
 
-    void setSpeed_x(int speed_x);
+    void setSpeed_x(float speed_x);
 
     float getSpeed_y() const;
 
-    void setSpeed_y(int speed_y);
+    void setSpeed_y(float speed_y);
 
 private:
     sf::Texture pTexture;

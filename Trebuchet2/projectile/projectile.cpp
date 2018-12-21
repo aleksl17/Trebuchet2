@@ -32,7 +32,7 @@ float projectile::getlocation_X() const {
     return location_x;
 }
 
-void projectile::setlocation_X(int x) {
+void projectile::setlocation_X(float x) {
     projectile::location_x = x;
 }
 
@@ -40,31 +40,15 @@ float projectile::getlocation_Y() const {
     return location_y;
 }
 
-void projectile::setlocation_Y(int y) {
+void projectile::setlocation_Y(float y) {
     projectile::location_y = y;
-}
-
-float projectile::getWidth() const {
-    return width;
-}
-
-void projectile::setWidth(int width) {
-    projectile::width = width;
-}
-
-float projectile::getHeight() const {
-    return height;
-}
-
-void projectile::setHeight(int height) {
-    projectile::height = height;
 }
 
 float projectile::getSpeed_x() const {
     return speed_x;
 }
 
-void projectile::setSpeed_x(int speed_x) {
+void projectile::setSpeed_x(float speed_x) {
     projectile::speed_x = speed_x;
 }
 
@@ -72,7 +56,7 @@ float projectile::getSpeed_y() const {
     return speed_y;
 }
 
-void projectile::setSpeed_y(int speed_y) {
+void projectile::setSpeed_y(float speed_y) {
     projectile::speed_y = speed_y;
 }
 
