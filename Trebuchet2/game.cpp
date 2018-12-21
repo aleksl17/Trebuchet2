@@ -64,7 +64,14 @@ bool Game::init() {
         return false;
     }
 
+    if (!victoryTexture.loadFromFile("data/victoryBackground.png")) {
+        std::cout << "Failed to load texture: menu background." << std::endl;
+        return false;
+    }
+
     background.setTexture(texture);
+
+    victoryBackground.setTexture(victoryTexture);
 
     //push catapults in a list
     catapults.push_back(cat);
@@ -513,7 +520,7 @@ bool Game::gameTick(sf::RenderWindow &window, std::list<std::shared_ptr<Object>>
             loopOnce = true;
         } else if (inVictory) {
             window.setView(uiView);
-            window.draw(background);
+            window.draw(victoryBackground);
             victory.draw(window);
         }
         else {

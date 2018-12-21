@@ -42,7 +42,11 @@ protected:
 
     sf::Texture texture;
 
+    sf::Texture victoryTexture;
+
     sf::Sprite background;
+
+    sf::Sprite victoryBackground;
 
     sf::RenderWindow window;
 
